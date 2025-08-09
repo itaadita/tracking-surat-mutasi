@@ -22,7 +22,7 @@ sheet = spreadsheet.get_worksheet(0)
 
 # --- Header eksplisit ---
 expected_headers = [
-    'No.', 'No.Surat', 'NAMA', 'Tanggal Surat ', 'Tanggal Surat Diterima',
+    'No.', 'No.Surat', 'NAMA', 'NIP', 'Tanggal Surat ', 'Tanggal Surat Diterima', 
     'Tanggal Surat Keluar', 'Perihal', 
     'Diteruskan Ke 1', 'Tanggal 1',
     'Dikirim Ke 2', 'Tanggal Kembali 2', 
@@ -97,10 +97,10 @@ df_log = buat_log_df(df)
 # --- UI ---
 st.title("📄 Tracking Surat Mutasi")
 
-no_surat = st.text_input("Masukkan Nomor Surat untuk Pencarian:")
+nip = st.text_input("Masukkan NIP untuk Pencarian:")
 
-if no_surat:
-    hasil = df[df['No.Surat'].astype(str).str.strip().str.lower() == no_surat.strip().lower()]
+if nip:
+    hasil = df[df['NIP'].astype(str).str.strip().str.lower() == nip.strip().lower()]
     
     if not hasil.empty:
         row = hasil.iloc[0]
@@ -108,6 +108,7 @@ if no_surat:
         st.subheader("📌 Hasil Pencarian:")
         st.write(f"**Nomor Surat:** {row['No.Surat']}")
         st.write(f"**Nama Ybs:** {row['NAMA']}")
+        st.write(f"**NIP:** {row['NIP']}")
         st.write(f"**Tanggal Surat:** {row['Tanggal Surat ']}")
         st.write(f"**Perihal:** {row['Perihal']}")
 
@@ -116,7 +117,7 @@ if no_surat:
         st.write(f"**Status Surat Terakhir:** {status_akhir}")
 
         st.markdown("**🧭 Alur Proses Surat (Visual Warna):**", unsafe_allow_html=True)
-        log_rows = df_log[df_log['Nomor Surat'].astype(str).str.strip().str.lower() == no_surat.strip().lower()]
+        log_rows = df_log[df_log['Nomor Surat'] == row['No.Surat']]
         if not log_rows.empty:
             for _, log_row in log_rows.iterrows():
                 warna = "#3498db" if log_row['Status'] == "Proses" else "#2ecc71"
@@ -134,4 +135,4 @@ if no_surat:
         st.dataframe(log_rows.reset_index(drop=True), use_container_width=True)
 
     else:
-        st.warning("Nomor Surat tidak ditemukan.")
+        st.warning("NIP tidak ditemukan.")
