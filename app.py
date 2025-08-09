@@ -125,15 +125,19 @@ if nip:
 
             for step_num in range(1, total_steps + 1):
                 this_step = log_rows[log_rows['Step'] == step_num]
-                
-                # Tentukan warna
-                if step_num <= steps_done:
-                    if step_num == 3 and steps_done == 3:
-                        warna = "#2ecc71"  # Hijau = Tahap 3 selesai
-                    else:
-                        warna = "#3498db"  # Biru = Tahap sudah diproses
+
+                # Penentuan warna sesuai aturan Anda
+                if steps_done == 1 and step_num == 1:
+                    warna = "#3498db"  # Biru
+                elif steps_done == 2 and step_num in [1, 2]:
+                    warna = "#3498db"  # Biru
+                elif steps_done == 3:
+                    if step_num in [1, 2]:
+                        warna = "#3498db"  # Biru
+                    elif step_num == 3:
+                        warna = "#2ecc71"  # Hijau
                 else:
-                    warna = "#95a5a6"  # Abu-abu = Belum diproses
+                    warna = "#95a5a6"  # Abu-abu
 
                 # Tampilkan box tahapan
                 if not this_step.empty:
