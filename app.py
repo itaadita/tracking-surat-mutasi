@@ -118,16 +118,48 @@ if nip:
 
         st.markdown("**🧭 Alur Proses Surat (Visual Warna):**", unsafe_allow_html=True)
         log_rows = df_log[df_log['Nomor Surat'] == row['No.Surat']]
+
         if not log_rows.empty:
-            for _, log_row in log_rows.iterrows():
-                warna = "#3498db" if log_row['Status'] == "Proses" else "#2ecc71"
-                html_log = f"""
-                <div style='background-color:{warna}; padding:10px; border-radius:8px; margin-bottom:6px; color:white;'>
-                    <b>Step {log_row['Step']}:</b> {log_row['Nama Tahapan']}<br>
-                    <i>Tanggal: {log_row['Tanggal']}</i> | Status: {log_row['Status']}
-                </div>
-                """
+            total_steps = 3
+            steps_done = log_rows['Step'].max()
+
+            for step_num in range(1, total_steps + 1):
+                this_step = log_rows[log_rows['Step'] == step_num]
+                
+                # Tentukan warna
+                if step_num <= steps_done:
+                    if step_num == 3 and steps_done == 3:
+                        warna = "#2ecc71"  # Hijau = Tahap 3 selesai
+                    else:
+                        warna = "#3498db"  # Biru = Tahap sudah diproses
+                else:
+                    warna = "#95a5a6"  # Abu-abu = Belum diproses
+
+                # Tampilkan box tahapan
+                if not this_step.empty:
+                    log_row = this_step.iloc[0]
+                    html_log = f"""
+                    <div style='background-color:{warna}; padding:10px; border-radius:8px; margin-bottom:6px; color:white;'>
+                        <b>Step {log_row['Step']}:</b> {log_row['Nama Tahapan']}<br>
+                        <i>Tanggal: {log_row['Tanggal']}</i> | Status: {log_row['Status']}
+                    </div>
+                    """
+                else:
+                    html_log = f"""
+                    <div style='background-color:{warna}; padding:10px; border-radius:8px; margin-bottom:6px; color:white;'>
+                        <b>Step {step_num}:</b> Belum ada progres
+                    </div>
+                    """
                 st.markdown(html_log, unsafe_allow_html=True)
+
+            # --- Legenda warna ---
+            st.markdown("""
+            **Legenda Warna:**
+            - <span style='background-color:#3498db; color:white; padding:4px 8px; border-radius:4px;'>Biru</span> = Sedang diproses  
+            - <span style='background-color:#2ecc71; color:white; padding:4px 8px; border-radius:4px;'>Hijau</span> = Selesai diproses  
+            - <span style='background-color:#95a5a6; color:white; padding:4px 8px; border-radius:4px;'>Abu-abu</span> = Belum diproses
+            """, unsafe_allow_html=True)
+
         else:
             st.info("Belum ada log alur proses ditemukan.")
 
@@ -136,4 +168,3 @@ if nip:
 
     else:
         st.warning("NIP tidak ditemukan.")
-
