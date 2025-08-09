@@ -40,71 +40,31 @@ df = st.session_state.df
 if 'last_refresh' in st.session_state:
     st.caption(f"📅 Data terakhir diperbarui: {st.session_state.last_refresh.strftime('%Y-%m-%d %H:%M:%S')}")
 
-# --- Fungsi log alur ---
+# --- Fungsi log ---
 def buat_log_df(df):
     log_data = []
     for _, row in df.iterrows():
         no_surat = row['No.Surat']
         logs = []
-
         if pd.notna(row['Diteruskan Ke 1']):
-            logs.append({
-                'Nomor Surat': no_surat,
-                'Step': 1,
-                'Nama Tahapan': f"Diteruskan ke: {row['Diteruskan Ke 1']}",
-                'Status': 'Proses',
-                'Tanggal': row['Tanggal 1']
-            })
-
+            logs.append({'Nomor Surat': no_surat, 'Step': 1, 'Nama Tahapan': f"📨 Diteruskan ke: {row['Diteruskan Ke 1']}", 'Status': 'Proses', 'Tanggal': row['Tanggal 1']})
         if pd.notna(row['Dikirim Ke 2']):
-            logs.append({
-                'Nomor Surat': no_surat,
-                'Step': 2,
-                'Nama Tahapan': f"Dikirim ke: {row['Dikirim Ke 2']}",
-                'Status': 'Proses',
-                'Tanggal': row['Tanggal Kembali 2']
-            })
-
+            logs.append({'Nomor Surat': no_surat, 'Step': 2, 'Nama Tahapan': f"📤 Dikirim ke: {row['Dikirim Ke 2']}", 'Status': 'Proses', 'Tanggal': row['Tanggal Kembali 2']})
         if pd.notna(row['Diteruskan Ke 3']):
-            logs.append({
-                'Nomor Surat': no_surat,
-                'Step': 3,
-                'Nama Tahapan': f"Diteruskan ke: {row['Diteruskan Ke 3']}",
-                'Status': 'Selesai',
-                'Tanggal': row['Tanggal Kembali 3']
-            })
-
+            logs.append({'Nomor Surat': no_surat, 'Step': 3, 'Nama Tahapan': f"✅ Diteruskan ke: {row['Diteruskan Ke 3']}", 'Status': 'Selesai', 'Tanggal': row['Tanggal Kembali 3']})
         log_data.extend(logs)
-    
     return pd.DataFrame(log_data)
-
-def gabung_log(row):
-    logs = []
-    if row['Diteruskan Ke 1'] and row['Tanggal 1']:
-        logs.append(f"Diteruskan ke {row['Diteruskan Ke 1']} ({row['Tanggal 1']})")
-    if row['Dikirim Ke 2']:
-        logs.append(f"{row['Dikirim Ke 2']}")
-    if row['Tanggal Kembali 2']:
-        logs.append(f"Kembali ({row['Tanggal Kembali 2']})")
-    if row['Diteruskan Ke 3']:
-        logs.append(f"Diteruskan ke {row['Diteruskan Ke 3']}")
-    if row['Tanggal Kembali 3']:
-        logs.append(f"Kembali ({row['Tanggal Kembali 3']})")
-    return logs
 
 df_log = buat_log_df(df)
 
 # --- UI ---
 st.title("📄 Tracking Surat Mutasi")
-
 nip = st.text_input("Masukkan NIP untuk Pencarian:")
 
 if nip:
     hasil = df[df['NIP'].astype(str).str.strip().str.lower() == nip.strip().lower()]
-    
     if not hasil.empty:
         row = hasil.iloc[0]
-
         st.subheader("📌 Hasil Pencarian:")
         st.write(f"**Nomor Surat:** {row['No.Surat']}")
         st.write(f"**Nama Ybs:** {row['NAMA']}")
@@ -112,11 +72,7 @@ if nip:
         st.write(f"**Tanggal Surat:** {row['Tanggal Surat ']}")
         st.write(f"**Perihal:** {row['Perihal']}")
 
-        logs_ringkas = gabung_log(row)
-        status_akhir = logs_ringkas[-1] if logs_ringkas else "Belum ada proses"
-        st.write(f"**Status Surat Terakhir:** {status_akhir}")
-
-        st.markdown("**🧭 Alur Proses Surat (Visual Warna):**", unsafe_allow_html=True)
+        st.markdown("**🧭 Alur Proses Surat:**", unsafe_allow_html=True)
         log_rows = df_log[df_log['Nomor Surat'] == row['No.Surat']]
 
         if not log_rows.empty:
@@ -126,20 +82,15 @@ if nip:
             for step_num in range(1, total_steps + 1):
                 this_step = log_rows[log_rows['Step'] == step_num]
 
-                # Penentuan warna sesuai aturan Anda
-                if steps_done == 1 and step_num == 1:
-                    warna = "#3498db"  # Biru
-                elif steps_done == 2 and step_num in [1, 2]:
-                    warna = "#3498db"  # Biru
-                elif steps_done == 3:
-                    if step_num in [1, 2]:
+                # Tentukan warna sesuai aturan
+                if step_num <= steps_done:
+                    if step_num == 3 and steps_done == 3:
+                        warna = "#2ecc71"  # Hijau tahap 3 selesai
+                    else:
                         warna = "#3498db"  # Biru
-                    elif step_num == 3:
-                        warna = "#2ecc71"  # Hijau
                 else:
                     warna = "#95a5a6"  # Abu-abu
 
-                # Tampilkan box tahapan
                 if not this_step.empty:
                     log_row = this_step.iloc[0]
                     html_log = f"""
@@ -158,17 +109,12 @@ if nip:
 
             # --- Legenda warna ---
             st.markdown("""
-            **Legenda Warna:**
-            - <span style='background-color:#3498db; color:white; padding:4px 8px; border-radius:4px;'>Biru</span> = Sedang diproses  
-            - <span style='background-color:#2ecc71; color:white; padding:4px 8px; border-radius:4px;'>Hijau</span> = Selesai diproses  
+            **Legenda Warna & Ikon:**
+            - 📨 <span style='background-color:#3498db; color:white; padding:4px 8px; border-radius:4px;'>Biru</span> = Sedang diproses (Tahap 1 / 2)  
+            - ✅ <span style='background-color:#2ecc71; color:white; padding:4px 8px; border-radius:4px;'>Hijau</span> = Selesai diproses (Tahap 3)  
             - <span style='background-color:#95a5a6; color:white; padding:4px 8px; border-radius:4px;'>Abu-abu</span> = Belum diproses
             """, unsafe_allow_html=True)
-
         else:
             st.info("Belum ada log alur proses ditemukan.")
-
-        st.markdown("**📋 Tabel Log Tahapan Surat:**")
-        st.dataframe(log_rows.reset_index(drop=True), use_container_width=True)
-
     else:
         st.warning("NIP tidak ditemukan.")
