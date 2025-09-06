@@ -20,13 +20,15 @@ spreadsheet_id = "1FugGupe8IfGzmvjZsuEkSwGvZTuLqVZG19YKr-RaPbY"
 spreadsheet = client.open_by_key(spreadsheet_id)
 sheet = spreadsheet.get_worksheet(0)
 
-# --- Header eksplisit ---
+# --- Header eksplisit (versi baru) ---
 expected_headers = [
-    'No.', 'No.Surat', 'NAMA', 'NIP', 'Tanggal Surat ', 'Tanggal Surat Diterima', 
-    'Tanggal Surat Keluar', 'Perihal', 
-    'Diteruskan Ke 1', 'Tanggal 1',
-    'Dikirim Ke 2', 'Tanggal Kembali 2', 
-    'Diteruskan Ke 3', 'Tanggal Kembali 3'
+    'No.', 'No.Surat', 'Tanggal Surat ', 'Kategori', 'NAMA', 'NIP',
+    'Tanggal Surat Diterima', 'Perihal',
+    'Disposisi 1', 'Tanggal Disposisi 1',
+    'Disposisi 2', 'Tanggal Disposisi 2',
+    'Disposisi 3', 'Tanggal Disposisi 3',
+    'Disposisi 4', 'Tanggal Disposisi 4',
+    'Diteruskan Kepada', 'Status Tindak Lanjut'
 ]
 
 # --- Refresh data ---
@@ -47,55 +49,76 @@ def buat_log_df(df):
         no_surat = row['No.Surat']
         logs = []
 
-        if pd.notna(row['Diteruskan Ke 1']):
+        # Disposisi 1
+        if pd.notna(row['Disposisi 1']):
             logs.append({
                 'Nomor Surat': no_surat,
                 'Step': 1,
-                'Nama Tahapan': f"Diteruskan ke: {row['Diteruskan Ke 1']}",
+                'Nama Tahapan': f"Disposisi: {row['Disposisi 1']}",
                 'Status': 'Proses',
-                'Tanggal': row['Tanggal 1']
+                'Tanggal': row['Tanggal Disposisi 1']
             })
 
-        if pd.notna(row['Dikirim Ke 2']):
+        # Disposisi 2
+        if pd.notna(row['Disposisi 2']):
             logs.append({
                 'Nomor Surat': no_surat,
                 'Step': 2,
-                'Nama Tahapan': f"Dikirim ke: {row['Dikirim Ke 2']}",
+                'Nama Tahapan': f"Disposisi: {row['Disposisi 2']}",
                 'Status': 'Proses',
-                'Tanggal': row['Tanggal Kembali 2']
+                'Tanggal': row['Tanggal Disposisi 2']
             })
 
-        if pd.notna(row['Diteruskan Ke 3']):
+        # Disposisi 3
+        if pd.notna(row['Disposisi 3']):
             logs.append({
                 'Nomor Surat': no_surat,
                 'Step': 3,
-                'Nama Tahapan': f"Diteruskan ke: {row['Diteruskan Ke 3']}",
-                'Status': 'Selesai',
-                'Tanggal': row['Tanggal Kembali 3']
+                'Nama Tahapan': f"Disposisi: {row['Disposisi 3']}",
+                'Status': 'Proses',
+                'Tanggal': row['Tanggal Disposisi 3']
+            })
+
+        # Disposisi 4
+        if pd.notna(row['Disposisi 4']):
+            logs.append({
+                'Nomor Surat': no_surat,
+                'Step': 4,
+                'Nama Tahapan': f"Disposisi: {row['Disposisi 4']}",
+                'Status': 'Proses',
+                'Tanggal': row['Tanggal Disposisi 4']
+            })
+
+        # Diteruskan Kepada (final)
+        if pd.notna(row['Diteruskan Kepada']):
+            logs.append({
+                'Nomor Surat': no_surat,
+                'Step': 5,
+                'Nama Tahapan': f"Diteruskan Kepada: {row['Diteruskan Kepada']}",
+                'Status': row['Status Tindak Lanjut'],
+                'Tanggal': row['Tanggal Surat Diterima']
             })
 
         log_data.extend(logs)
     
     return pd.DataFrame(log_data)
 
+# --- Fungsi ringkas status ---
 def gabung_log(row):
     logs = []
-    if row['Diteruskan Ke 1'] and row['Tanggal 1']:
-        logs.append(f"Diteruskan ke {row['Diteruskan Ke 1']} ({row['Tanggal 1']})")
-    if row['Dikirim Ke 2']:
-        logs.append(f"{row['Dikirim Ke 2']}")
-    if row['Tanggal Kembali 2']:
-        logs.append(f"Kembali ({row['Tanggal Kembali 2']})")
-    if row['Diteruskan Ke 3']:
-        logs.append(f"Diteruskan ke {row['Diteruskan Ke 3']}")
-    if row['Tanggal Kembali 3']:
-        logs.append(f"Kembali ({row['Tanggal Kembali 3']})")
+    for i in range(1, 5):
+        if row.get(f'Disposisi {i}') and row.get(f'Tanggal Disposisi {i}'):
+            logs.append(f"Disposisi {i}: {row[f'Disposisi {i}']} ({row[f'Tanggal Disposisi {i}']})")
+
+    if row.get('Diteruskan Kepada'):
+        logs.append(f"Diteruskan Kepada: {row['Diteruskan Kepada']} - Status: {row['Status Tindak Lanjut']}")
+
     return logs
 
 df_log = buat_log_df(df)
 
 # --- UI ---
-st.title("📄 Tracking Surat Mutasi")
+st.title("📄 Tracking Surat")
 
 nip = st.text_input("Masukkan NIP untuk Pencarian:")
 
@@ -110,6 +133,7 @@ if nip:
         st.write(f"**Nama Ybs:** {row['NAMA']}")
         st.write(f"**NIP:** {row['NIP']}")
         st.write(f"**Tanggal Surat:** {row['Tanggal Surat ']}")
+        st.write(f"**Kategori:** {row['Kategori']}")
         st.write(f"**Perihal:** {row['Perihal']}")
 
         logs_ringkas = gabung_log(row)
@@ -120,7 +144,7 @@ if nip:
         log_rows = df_log[df_log['Nomor Surat'] == row['No.Surat']]
         if not log_rows.empty:
             for _, log_row in log_rows.iterrows():
-                warna = "#3498db" if log_row['Status'] == "Proses" else "#2ecc71"
+                warna = "#3498db" if log_row['Status'] == "On Progress" or log_row['Status'] == "Proses" else "#2ecc71"
                 html_log = f"""
                 <div style='background-color:{warna}; padding:10px; border-radius:8px; margin-bottom:6px; color:white;'>
                     <b>Step {log_row['Step']}:</b> {log_row['Nama Tahapan']}<br>
@@ -136,5 +160,3 @@ if nip:
 
     else:
         st.warning("NIP tidak ditemukan.")
-        st.warning("NIP tidak ditemukan.")
-
