@@ -161,7 +161,12 @@ if nip:
             st.info("Belum ada log alur proses ditemukan.")
 
         st.markdown("**📋 Tabel Log Tahapan Surat:**")
-        st.dataframe(log_rows.reset_index(drop=True), use_container_w
+        st.dataframe(log_rows.reset_index(drop=True), use_container_width=True)
+
+    else:
+        st.warning("NIP tidak ditemukan.")
+
+
 
 
 
