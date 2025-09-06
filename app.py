@@ -140,9 +140,7 @@ if nip:
         st.write(f"**NIP:** {row['NIP']}")
         st.write(f"**Tanggal Surat:** {row['Tanggal Surat']}")
         st.write(f"**Perihal:** {row['Perihal']}")
-        
-
-    if st.button("📊 Monitoring Surat"):
+            
         logs_ringkas = gabung_log(row)
         status_akhir = logs_ringkas[-1] if logs_ringkas else "Belum ada proses"
         st.write(f"**Status Surat Terakhir:** {status_akhir}")
@@ -151,11 +149,11 @@ if nip:
         log_rows = df_log[df_log['Nomor Surat'] == row['No.Surat']]
         if not log_rows.empty:
             for _, log_row in log_rows.iterrows():
-                warna = "#3498db" if log_row['Status'] == "On Progress" or log_row['Status'] == "Proses" else "#2ecc71"
+                warna = "#3498db" if log_row['Status'] in ["On Progress", "Proses"] else "#2ecc71"
                 html_log = f"""
                 <div style='background-color:{warna}; padding:10px; border-radius:8px; margin-bottom:6px; color:white;'>
-                     <b>Step {log_row['Step']}:</b> {log_row['Nama Tahapan']}<br>
-                     <i>Tanggal: {log_row['Tanggal']}</i> | Status: {log_row['Status']}
+                    <b>Step {log_row['Step']}:</b> {log_row['Nama Tahapan']}<br>
+                    <i>Tanggal: {log_row['Tanggal']}</i> | Status: {log_row['Status']}
                 </div>
                 """
                 st.markdown(html_log, unsafe_allow_html=True)
@@ -163,10 +161,8 @@ if nip:
             st.info("Belum ada log alur proses ditemukan.")
 
         st.markdown("**📋 Tabel Log Tahapan Surat:**")
-        st.dataframe(log_rows.reset_index(drop=True), use_container_width=True)
+        st.dataframe(log_rows.reset_index(drop=True), use_container_w
 
-   else:
-        st.warning("NIP tidak ditemukan.")
 
 
 
