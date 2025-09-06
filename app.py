@@ -132,7 +132,7 @@ if nip:
         st.write(f"**Nomor Surat:** {row['No.Surat']}")
         st.write(f"**Nama Ybs:** {row['NAMA']}")
         st.write(f"**NIP:** {row['NIP']}")
-        st.write(f"**Tanggal Surat:** {row['Tanggal Surat ']}")
+        st.write(f"**Tanggal Surat:** {row['Tanggal Surat']}")
         st.write(f"**Kategori:** {row['Kategori']}")
         st.write(f"**Perihal:** {row['Perihal']}")
 
@@ -160,6 +160,7 @@ if nip:
 
     else:
         st.warning("NIP tidak ditemukan.")
+
 
 
 
