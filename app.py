@@ -22,7 +22,7 @@ sheet = spreadsheet.get_worksheet(0)
 
 # --- Header eksplisit (versi baru) ---
 expected_headers = [
-    'No.', 'No.Surat', 'Tanggal Surat ', 'Kategori', 'NAMA', 'NIP',
+    'No.', 'No.Surat', 'Tanggal Surat', 'Kategori', 'NAMA', 'NIP',
     'Tanggal Surat Diterima', 'Perihal',
     'Disposisi 1', 'Tanggal Disposisi 1',
     'Disposisi 2', 'Tanggal Disposisi 2',
@@ -160,3 +160,4 @@ if nip:
 
     else:
         st.warning("NIP tidak ditemukan.")
+
