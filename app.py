@@ -21,19 +21,19 @@ spreadsheet = client.open_by_key(spreadsheet_id)
 sheet = spreadsheet.get_worksheet(0)
 
 # --- Header eksplisit (versi baru) ---
-expected_headers = [
-    'No.', 'No.Surat', 'Tanggal Surat', 'Kategori', 'NAMA', 'NIP',
-    'Tanggal Surat Diterima', 'Perihal',
-    'Disposisi 1', 'Tanggal Disposisi 1',
-    'Disposisi 2', 'Tanggal Disposisi 2',
-    'Disposisi 3', 'Tanggal Disposisi 3',
-    'Disposisi 4', 'Tanggal Disposisi 4',
-    'Diteruskan Kepada', 'Status Tindak Lanjut'
-]
+#expected_headers = [
+    #'No.', 'No.Surat', 'Tanggal Surat', 'Kategori', 'NAMA', 'NIP',
+    #'Tanggal Surat Diterima', 'Perihal',
+    #'Disposisi 1', 'Tanggal Disposisi 1',
+    #'Disposisi 2', 'Tanggal Disposisi 2',
+    #'Disposisi 3', 'Tanggal Disposisi 3',
+    #'Disposisi 4', 'Tanggal Disposisi 4',
+    #'Diteruskan Kepada', 'Status Tindak Lanjut'
+#]
 
 # --- Refresh data ---
 if 'df' not in st.session_state or st.button("🔄 Refresh Data"):
-    data = sheet.get_all_records(expected_headers=expected_headers)
+    data = sheet.get_all_records
     st.session_state.df = pd.DataFrame(data)
     st.session_state.last_refresh = pd.Timestamp.now()
 
@@ -160,4 +160,5 @@ if nip:
 
     else:
         st.warning("NIP tidak ditemukan.")
+
 
