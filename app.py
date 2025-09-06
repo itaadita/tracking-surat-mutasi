@@ -22,7 +22,6 @@ sheet = spreadsheet.get_worksheet(0)
 
 # --- Refresh data ---
 if 'df' not in st.session_state or st.button("🔄 Refresh Data"):
-    data = sheet.get_all_records(expected_headers=expected_headers)
     st.session_state.df = pd.DataFrame(data)
     st.session_state.last_refresh = pd.Timestamp.now()
 
@@ -149,4 +148,5 @@ if nip:
 
     else:
         st.warning("NIP tidak ditemukan.")
+
 
