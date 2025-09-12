@@ -170,15 +170,24 @@ def timeline_tracking(log_rows):
 df_log = buat_log_df(df)
 
 # --- UI Halaman Depan (Logo + Header Tengah) ---
-col1, col2, col3 = st.columns([1,2,1])
-with col2:
-    st.image("assets/kemenag.png", width=100)  # Logo muncul dan diperkecil
+st.markdown("<br>", unsafe_allow_html=True)
 
+# Logo di tengah
 st.markdown(
     """
-    <div style="text-align: center; margin-top: -10px;">
-        <h4 style="margin-bottom:2px;">Kementerian Agama Republik Indonesia</h4>
-        <h5 style="margin-top:2px;">Direktorat Jenderal Pendidikan Islam</h5>
+    <div style="text-align: center;">
+        <img src="assets/kemenag.png" width="100">
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
+# Header
+st.markdown(
+    """
+    <div style="text-align: center; margin-top: 10px;">
+        <h4 style="margin-bottom:4px;">Kementerian Agama Republik Indonesia</h4>
+        <h5 style="margin-top:4px;">Direktorat Jenderal Pendidikan Islam</h5>
     </div>
     """,
     unsafe_allow_html=True
@@ -203,12 +212,24 @@ st.markdown(
 # --- Input + Button di Tengah ---
 col1, col2, col3 = st.columns([1,2,1])
 with col2:
-    col_input, col_btn = st.columns([4,1])
+    col_input, col_btn = st.columns([5,1])
     with col_input:
         nip = st.text_input("Masukkan NIP:", label_visibility="collapsed", 
                             placeholder="Contoh: 198765432019032001")
     with col_btn:
         cari = st.button("🔍 Lacak", use_container_width=True)
+
+st.markdown("<hr>", unsafe_allow_html=True)
+
+# --- Data terakhir diperbarui ---
+st.markdown(
+    f"""
+    <div style="text-align: center; font-size: 13px; color: gray; margin-bottom: 10px;">
+        📅 Data terakhir diperbarui: {pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S")}
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 # --- Eksekusi pencarian ---
 if nip and cari:
@@ -241,12 +262,15 @@ if nip and cari:
         st.warning("NIP tidak ditemukan.")
 
 # --- Footer ---
-st.markdown("""
-<hr>
-<p style="text-align:center; color:gray; font-size:14px;">
-Diberdayakan oleh: <b>Tim Kerja OKH</b>
-</p>
-""", unsafe_allow_html=True)
+st.markdown(
+    """
+    <div style="text-align: center; font-size: 13px; color: gray;">
+        Diberdayakan oleh: <b>Tim Kerja OKH</b>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 
 
 
