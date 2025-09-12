@@ -141,17 +141,27 @@ df_log = buat_log_df(df)
 
 
 # --- UI Halaman Depan (Logo + Header Tengah) ---
-st.markdown("<br>", unsafe_allow_html=True)
-
-# Logo di tengah (pakai st.image agar pasti muncul)
-st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
-st.image("assets/kemenag.png", width=100)
-st.markdown("</div>", unsafe_allow_html=True)
-
-# Header
 st.markdown(
     """
-    <div style="text-align: center; margin-top: 10px;">
+    <style>
+    .centered-image {
+        display: flex;
+        justify-content: center;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Logo di tengah dengan st.image
+col1, col2, col3 = st.columns([1,2,1])
+with col2:
+    st.image("assets/kemenag.png", width=120)
+
+# Header di tengah
+st.markdown(
+    """
+    <div style="text-align:center;">
         <h4 style="margin-bottom:4px;">Kementerian Agama Republik Indonesia</h4>
         <h5 style="margin-top:4px;">Direktorat Jenderal Pendidikan Islam</h5>
     </div>
@@ -159,8 +169,19 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.markdown("<hr>", unsafe_allow_html=True)
+# 🔹 Tambahkan jeda
+st.markdown("<br><br>", unsafe_allow_html=True)
 
+st.markdown(
+    """
+    <h1 style="text-align:center; color:#2c3e50;">📄 Tracking Surat Mutasi</h1>
+    <p style="font-size:18px; text-align:center; color:#34495e;">
+        Masukkan <b>NIP</b> Anda untuk melakukan pencarian progress <br>
+        <strong>Surat Mutasi</strong> di lingkungan Kementerian Agama.
+    </p>
+    """,
+    unsafe_allow_html=True
+)
 
 # Judul Tracking
 st.markdown(
@@ -242,6 +263,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
