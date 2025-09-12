@@ -170,16 +170,18 @@ def timeline_tracking(log_rows):
 df_log = buat_log_df(df)
 
 # --- UI Halaman Depan (Logo di tengah) ---
-col1, col2, col3 = st.columns([1,2,1])
-with col2:   # taruh logo di kolom tengah
-    st.image("assets/kemenag.png", width=120)
-
-st.markdown("""
-<h2 style="text-align:center; color:#2c3e50;">
-Kementerian Agama Republik Indonesia<br>
-Direktorat Jenderal Pendidikan Islam
-</h2>
-""", unsafe_allow_html=True)
+st.markdown(
+    """
+    <div style="text-align:center;">
+        <st.image="assets/kemenag.png" width="120">
+        <h2 style="color:#2c3e50; margin-top:10px;">
+            Kementerian Agama Republik Indonesia<br>
+            Direktorat Jenderal Pendidikan Islam
+        </h2>
+    </div>
+    """,
+    unsafe_allow_html=True
+) 
 
 st.title("📄 Tracking Surat Mutasi")
 
@@ -233,6 +235,7 @@ st.markdown("""
 Diberdayakan oleh: <b>Tim Kerja OKH</b>
 </p>
 """, unsafe_allow_html=True)
+
 
 
 
