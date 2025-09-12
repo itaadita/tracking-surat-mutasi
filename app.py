@@ -121,7 +121,7 @@ def gabung_log(row):
 
     return logs
 
-# --- Fungsi timeline ala Shopee ---
+# --- Fungsi timeline ala Shopee + Emoji ---
 def timeline_tracking(log_rows):
     st.markdown("""
     <style>
@@ -152,9 +152,13 @@ def timeline_tracking(log_rows):
     html = "<div class='timeline'>"
     for _, step in log_rows.iterrows():
         status_class = "done" if step['Status'] not in ["On Progress", "Proses"] else ""
+        
+        # 🔹 Tambahkan emoji status
+        icon = "✅" if status_class == "done" else "⏳"
+        
         html += f"""
         <div class='entry {status_class}'>
-            <b>Step {step['Step']}:</b> {step['Nama Tahapan']}<br>
+            <b>Step {step['Step']}:</b> {step['Nama Tahapan']} {icon}<br>
             📅 {step['Tanggal']} | Status: {step['Status']}
         </div>
         """
@@ -197,6 +201,7 @@ if nip:
 
     else:
         st.warning("NIP tidak ditemukan.")
+
 
 
 
