@@ -31,25 +31,24 @@ sheet = spreadsheet.get_worksheet(0)
     #'Diteruskan Kepada', 'Status Tindak Lanjut'
 #]
 
-# --- Refresh data (tanpa tombol) ---
-if 'df' not in st.session_state:
-    raw_data = sheet.get_all_values()
-    
-    # baris ke-10 (index 9) jadi header
-    headers = raw_data[9]  
-    rows = raw_data[10:]   # data mulai baris 11
-    
-    df = pd.DataFrame(rows, columns=headers)
-    st.session_state.df = df
-    st.session_state.last_refresh = pd.Timestamp.now()
+# --- Fungsi refresh data terbaru ---
+def refresh_data(force=False):
+    if 'df' not in st.session_state or force:
+        raw_data = sheet.get_all_values()
+        headers = raw_data[9]        # baris ke-10 jadi header
+        rows = raw_data[10:]         # data mulai baris 11
+        st.session_state.df = pd.DataFrame(rows, columns=headers)
+        st.session_state.last_refresh = pd.Timestamp.now()
 
+# --- Panggil refresh data awal ---
+refresh_data(force=False)
 df = st.session_state.df
 
 # --- Fungsi bantu ---
 def is_filled(val):
     return pd.notna(val) and str(val).strip() != ""
 
-# --- Fungsi log alur versi final ---
+# --- Fungsi log alur ---
 def buat_log_df(df):
     log_data = []
 
@@ -146,7 +145,6 @@ def buat_log_df(df):
 
     return pd.DataFrame(log_data)
 
-
 # --- Fungsi timeline ala Shopee ---
 def timeline_tracking(log_rows):
     st.markdown("""
@@ -190,15 +188,13 @@ def timeline_tracking(log_rows):
 
     st.markdown(html, unsafe_allow_html=True)
 
-
 # --- UI Halaman Depan ---
 col1, col2 = st.columns([0.7, 4.3])
 with col1:
     st.image("assets/kemenag.png", width=70)
 
 with col2:
-    st.markdown(
-        """
+    st.markdown("""
         <div style="text-align:left; margin-left:0px;">
             <p style="margin:0; font-size:20px; font-weight:bold;">
                 KEMENTERIAN AGAMA REPUBLIK INDONESIA
@@ -207,12 +203,9 @@ with col2:
                 DIREKTORAT JENDERAL PENDIDIKAN ISLAM
             </p>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
+    """, unsafe_allow_html=True)
 
-st.markdown(
-    """
+st.markdown("""
     <div style="text-align:center; margin-top:40px;">
         <h2 style="color:#2c3e50;">📄 Tracking Surat Mutasi</h2>
         <p style="font-size:16px; color:#34495e; margin-top:20px;">
@@ -220,9 +213,7 @@ st.markdown(
             <strong>Surat Mutasi</strong> di lingkungan Kementerian Agama.
         </p>
     </div>
-    """,
-    unsafe_allow_html=True
-)
+""", unsafe_allow_html=True)
 
 # --- Input + Button ---
 col1, col2, col3 = st.columns([1, 3, 1])
@@ -247,16 +238,12 @@ if nip and cari:
         st.write(f"**Tanggal Surat:** {row.get('Tanggal Surat', '-')}")
         st.write(f"**Perihal:** {row.get('Perihal', '-')}")
 
-        # Buat log timeline hanya dari row ini (aman)
+        # Buat log timeline hanya dari row ini
         single_row_df = pd.DataFrame([row.to_dict()])
         df_log = buat_log_df(single_row_df)
 
         # Status terakhir
-        if not df_log.empty:
-            status_akhir = df_log.iloc[-1]['Nama Tahapan']
-        else:
-            status_akhir = "Belum ada proses"
-
+        status_akhir = df_log.iloc[-1]['Nama Tahapan'] if not df_log.empty else "Belum ada proses"
         st.write(f"**Status Surat Terakhir:** {status_akhir}")
 
         # Timeline dan tabel log
@@ -268,27 +255,21 @@ if nip and cari:
             st.info("Belum ada log alur proses ditemukan.")
     else:
         st.warning("NIP tidak ditemukan.")
-        
-# --- Data terakhir diperbarui ---
+
+# --- Footer & Data terakhir diperbarui ---
 if 'last_refresh' in st.session_state:
-    st.markdown(
-        f"""
+    st.markdown(f"""
         <div style="text-align: center; font-size: 13px; color: gray; margin-bottom: 5px; margin-top: 15px;">
             📅 Data terakhir diperbarui: {st.session_state.last_refresh.strftime("%Y-%m-%d %H:%M:%S")}
         </div>
-        """,
-        unsafe_allow_html=True
-    )
+    """, unsafe_allow_html=True)
 
-# --- Footer ---
-st.markdown(
-    """
+st.markdown("""
     <div style="text-align: center; font-size: 13px; color: gray;">
         Diberdayakan oleh: <b>Tim Kerja OKH</b>
     </div>
-    """,
-    unsafe_allow_html=True
-)
+""", unsafe_allow_html=True)
+
 
 
 
