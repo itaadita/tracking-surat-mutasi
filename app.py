@@ -152,7 +152,7 @@ with col2:
 st.markdown(
     """
     <div style="text-align:center; margin-top:-10px;">
-        <h4 style="margin:2px 0;">Kementerian Agama Republik Indonesia</h4>
+        <h4 style="margin:1px 0;">Kementerian Agama Republik Indonesia</h4>
         <h5 style="margin:0;">Direktorat Jenderal Pendidikan Islam</h5>
     </div>
     """,
@@ -239,6 +239,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
