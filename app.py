@@ -45,9 +45,6 @@ if 'df' not in st.session_state:
 
 df = st.session_state.df
 
-import pandas as pd
-import streamlit as st
-
 # --- Fungsi bantu ---
 def is_filled(val):
     return pd.notna(val) and str(val).strip() != ""
@@ -271,6 +268,17 @@ if nip and cari:
             st.info("Belum ada log alur proses ditemukan.")
     else:
         st.warning("NIP tidak ditemukan.")
+        
+# --- Data terakhir diperbarui ---
+if 'last_refresh' in st.session_state:
+    st.markdown(
+        f"""
+        <div style="text-align: center; font-size: 13px; color: gray; margin-bottom: 5px; margin-top: 15px;">
+            📅 Data terakhir diperbarui: {st.session_state.last_refresh.strftime("%Y-%m-%d %H:%M:%S")}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 # --- Footer ---
 st.markdown(
@@ -280,7 +288,16 @@ st.markdown(
     </div>
     """,
     unsafe_allow_html=True
+# --- Footer ---
+st.markdown(
+    """
+    <div style="text-align: center; font-size: 13px; color: gray;">
+        Diberdayakan oleh: <b>Tim Kerja OKH</b>
+    </div>
+    """,
+    unsafe_allow_html=True
 )
+
 
 
 
