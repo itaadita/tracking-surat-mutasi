@@ -149,26 +149,22 @@ def timeline_tracking(log_rows):
 
     st.markdown("### 🧭 Timeline Proses Surat")
 
-    # 🔹 Bangun HTML sekaligus
+    # 🔹 Bangun HTML
     html = "<div class='timeline'>"
     for _, step in log_rows.iterrows():
         status_class = "done" if step['Status'] not in ["On Progress", "Proses"] else "progress"
         emoji = "✅" if status_class == "done" else "⏳"
 
-        html += f"""
-        <div class='entry {status_class}'>
-            <div class='entry-text'>
-                <b>Step {step['Step']}:</b> {step['Nama Tahapan']} {emoji}<br>
-                📅 {step['Tanggal']} | Status: {step['Status']}
-            </div>
-        </div>
-        """
-
+        html += (
+            f"<div class='entry {status_class}'>"
+            f"<b>Step {step['Step']}:</b> {step['Nama Tahapan']} {emoji}<br>"
+            f"📅 {step['Tanggal']} | Status: {step['Status']}"
+            f"</div>"
+        )
     html += "</div>"
 
-    # 🔹 Render sekali saja, bukan per loop
+    # 🔹 Render HTML sekali saja
     st.markdown(html, unsafe_allow_html=True)
-
 
 # --- Buat log dataframe ---
 df_log = buat_log_df(df)
@@ -206,6 +202,7 @@ if nip:
 
     else:
         st.warning("NIP tidak ditemukan.")
+
 
 
 
