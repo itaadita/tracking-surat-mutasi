@@ -46,7 +46,11 @@ if 'df' not in st.session_state:
 df = st.session_state.df
 
 
-# --- Fungsi log alur versi baru ---
+# --- Fungsi bantu untuk cek kolom terisi ---
+def is_filled(val):
+    return pd.notna(val) and str(val).strip() != ""
+
+# --- Fungsi log alur versi final ---
 def buat_log_df(df):
     log_data = []
 
@@ -56,7 +60,7 @@ def buat_log_df(df):
 
         # --- Step 1 ---
         tanggal_terima = row.get('Tanggal Surat Diterima')
-        if pd.notna(tanggal_terima):
+        if is_filled(tanggal_terima):
             logs.append({
                 'Nomor Surat': no_surat,
                 'Step': 1,
@@ -67,7 +71,7 @@ def buat_log_df(df):
 
         # --- Step 2 ---
         disp1 = row.get('Disposisi 1')
-        if pd.notna(disp1):
+        if is_filled(disp1):
             logs.append({
                 'Nomor Surat': no_surat,
                 'Step': 2,
@@ -76,13 +80,13 @@ def buat_log_df(df):
                 'Tanggal': row.get('Tanggal Disposisi 1')
             })
         else:
-            # Jika Step 2 kosong, stop, tidak lanjut ke Step 3
+            # Stop jika Step 2 kosong
             log_data.extend(logs)
             continue
 
         # --- Step 3 ---
         disp2 = row.get('Disposisi 2')
-        if pd.notna(disp2):
+        if is_filled(disp2):
             if disp2 in ['Diktis', 'GTK']:
                 keterangan = f"Dokumen Usul Mutasi sedang proses verifikasi-validasi berkas oleh {disp2}"
             elif disp2 == 'Biro SDM':
@@ -103,7 +107,7 @@ def buat_log_df(df):
 
         # --- Step 4 ---
         disp3 = row.get('Disposisi 3')
-        if pd.notna(disp3):
+        if is_filled(disp3):
             if disp3 in ['Diktis', 'GTK', 'PAI']:
                 keterangan = f"Dokumen Usul Mutasi sedang proses verifikasi-validasi berkas oleh {disp3}"
             elif disp3 == 'Biro SDM':
@@ -126,7 +130,7 @@ def buat_log_df(df):
 
         # --- Step 5 ---
         disp4 = row.get('Disposisi 4')
-        if pd.notna(disp4):
+        if is_filled(disp4):
             if disp4 == 'Biro SDM':
                 keterangan = "Dokumen Usul Mutasi sudah diterima oleh Biro SDM-Sekretariat Jenderal"
             else:
@@ -299,6 +303,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
