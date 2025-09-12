@@ -55,24 +55,30 @@ def buat_log_df(df):
         logs = []
 
         # --- Step 1 ---
-        if pd.notna(row.get('Tanggal Surat Diterima')):
+        tanggal_terima = row.get('Tanggal Surat Diterima')
+        if pd.notna(tanggal_terima):
             logs.append({
                 'Nomor Surat': no_surat,
                 'Step': 1,
                 'Nama Tahapan': "Usulan Dokumen Mutasi diterima oleh petugas (Tim Kerja OKH)",
                 'Status': 'Proses',
-                'Tanggal': row.get('Tanggal Surat Diterima')
+                'Tanggal': tanggal_terima
             })
 
         # --- Step 2 ---
-        if pd.notna(row.get('Disposisi 1')):
+        disp1 = row.get('Disposisi 1')
+        if pd.notna(disp1):
             logs.append({
                 'Nomor Surat': no_surat,
                 'Step': 2,
-                'Nama Tahapan': f"Menunggu Disposisi Pimpinan ({row['Disposisi 1']})",
+                'Nama Tahapan': f"Menunggu Disposisi Pimpinan ({disp1})",
                 'Status': 'Proses',
                 'Tanggal': row.get('Tanggal Disposisi 1')
             })
+        else:
+            # Jika Step 2 kosong, stop, tidak lanjut ke Step 3
+            log_data.extend(logs)
+            continue
 
         # --- Step 3 ---
         disp2 = row.get('Disposisi 2')
@@ -91,6 +97,9 @@ def buat_log_df(df):
                 'Status': 'Proses',
                 'Tanggal': row.get('Tanggal Disposisi 2')
             })
+        else:
+            log_data.extend(logs)
+            continue  # Stop jika Step 3 kosong
 
         # --- Step 4 ---
         disp3 = row.get('Disposisi 3')
@@ -111,6 +120,9 @@ def buat_log_df(df):
                 'Status': 'Proses',
                 'Tanggal': row.get('Tanggal Disposisi 3')
             })
+        else:
+            log_data.extend(logs)
+            continue  # Stop jika Step 4 kosong
 
         # --- Step 5 ---
         disp4 = row.get('Disposisi 4')
@@ -131,8 +143,6 @@ def buat_log_df(df):
         log_data.extend(logs)
 
     return pd.DataFrame(log_data)
-
-
 
 # --- Fungsi ringkas status ---
 def gabung_log(row):
@@ -289,6 +299,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
