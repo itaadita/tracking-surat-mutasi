@@ -144,6 +144,15 @@ def timeline_tracking(log_rows):
     .done:before {
         color: #2ecc71;
     }
+    .entry-text {
+        font-size: 15px;
+    }
+    .done .entry-text {
+        color: #2ecc71;
+    }
+    .progress .entry-text {
+        color: #7f8c8d;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -151,18 +160,19 @@ def timeline_tracking(log_rows):
 
     html = "<div class='timeline'>"
     for _, step in log_rows.iterrows():
-        status_class = "done" if step['Status'] not in ["On Progress", "Proses"] else ""
-        
-        # 🔹 Tambahkan emoji status
+        status_class = "done" if step['Status'] not in ["On Progress", "Proses"] else "progress"
         icon = "✅" if status_class == "done" else "⏳"
-        
+
         html += f"""
         <div class='entry {status_class}'>
-            <b>Step {step['Step']}:</b> {step['Nama Tahapan']} {icon}<br>
-            📅 {step['Tanggal']} | Status: {step['Status']}
+            <div class='entry-text'>
+                <b>Step {step['Step']}:</b> {step['Nama Tahapan']} {icon}<br>
+                📅 {step['Tanggal']} | Status: {step['Status']}
+            </div>
         </div>
         """
     html += "</div>"
+
     st.markdown(html, unsafe_allow_html=True)
 
 # --- Buat log dataframe ---
@@ -201,6 +211,7 @@ if nip:
 
     else:
         st.warning("NIP tidak ditemukan.")
+
 
 
 
