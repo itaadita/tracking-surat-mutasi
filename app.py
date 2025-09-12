@@ -46,37 +46,92 @@ if 'df' not in st.session_state:
 df = st.session_state.df
 
 
-# --- Fungsi log alur ---
+# --- Fungsi log alur versi baru ---
 def buat_log_df(df):
     log_data = []
+
     for _, row in df.iterrows():
         no_surat = row['No.Surat']
         logs = []
 
-        # Disposisi 1-4
-        for i in range(1, 5):
-            if pd.notna(row.get(f'Disposisi {i}')):
-                logs.append({
-                    'Nomor Surat': no_surat,
-                    'Step': i,
-                    'Nama Tahapan': f"Disposisi: {row[f'Disposisi {i}']}",
-                    'Status': 'Proses',
-                    'Tanggal': row.get(f'Tanggal Disposisi {i}')
-                })
-
-        # Diteruskan Kepada (final)
-        if pd.notna(row.get('Diteruskan Kepada')):
+        # --- Step 1 ---
+        if pd.notna(row.get('Tanggal Surat Diterima')):
             logs.append({
                 'Nomor Surat': no_surat,
-                'Step': 5,
-                'Nama Tahapan': f"Diteruskan Kepada: {row['Diteruskan Kepada']}",
-                'Status': row.get('Status Tindak Lanjut'),
+                'Step': 1,
+                'Nama Tahapan': "Usulan Dokumen Mutasi diterima oleh petugas (Tim Kerja OKH)",
+                'Status': 'Proses',
                 'Tanggal': row.get('Tanggal Surat Diterima')
             })
 
+        # --- Step 2 ---
+        if pd.notna(row.get('Disposisi 1')):
+            logs.append({
+                'Nomor Surat': no_surat,
+                'Step': 2,
+                'Nama Tahapan': f"Menunggu Disposisi Pimpinan ({row['Disposisi 1']})",
+                'Status': 'Proses',
+                'Tanggal': row.get('Tanggal Disposisi 1')
+            })
+
+        # --- Step 3 ---
+        disp2 = row.get('Disposisi 2')
+        if pd.notna(disp2):
+            if disp2 in ['Diktis', 'GTK']:
+                keterangan = f"Dokumen Usul Mutasi sedang proses verifikasi-validasi berkas oleh {disp2}"
+            elif disp2 == 'Biro SDM':
+                keterangan = "Dokumen Usul Mutasi sudah diterima oleh Biro SDM-Sekretariat Jenderal"
+            else:
+                keterangan = f"Dokumen Usul Mutasi sedang di proses pada Tim Kepegawaian OKH melalui PIC ({disp2})"
+            
+            logs.append({
+                'Nomor Surat': no_surat,
+                'Step': 3,
+                'Nama Tahapan': keterangan,
+                'Status': 'Proses',
+                'Tanggal': row.get('Tanggal Disposisi 2')
+            })
+
+        # --- Step 4 ---
+        disp3 = row.get('Disposisi 3')
+        if pd.notna(disp3):
+            if disp3 in ['Diktis', 'GTK', 'PAI']:
+                keterangan = f"Dokumen Usul Mutasi sedang proses verifikasi-validasi berkas oleh {disp3}"
+            elif disp3 == 'Biro SDM':
+                keterangan = "Dokumen Usul Mutasi sudah diterima oleh Biro SDM-Sekretariat Jenderal"
+            elif disp3 == 'Dirjen':
+                keterangan = "Menunggu Disposisi/TTE Pimpinan"
+            else:
+                keterangan = f"Surat Persetujuan Mutasi sedang di proses pada Tim Kepegawaian OKH melalui PIC ({disp3})"
+            
+            logs.append({
+                'Nomor Surat': no_surat,
+                'Step': 4,
+                'Nama Tahapan': keterangan,
+                'Status': 'Proses',
+                'Tanggal': row.get('Tanggal Disposisi 3')
+            })
+
+        # --- Step 5 ---
+        disp4 = row.get('Disposisi 4')
+        if pd.notna(disp4):
+            if disp4 == 'Biro SDM':
+                keterangan = "Dokumen Usul Mutasi sudah diterima oleh Biro SDM-Sekretariat Jenderal"
+            else:
+                keterangan = f"Dokumen Usul Mutasi sedang di proses pada Tim Kepegawaian OKH melalui PIC ({disp4})"
+
+            logs.append({
+                'Nomor Surat': no_surat,
+                'Step': 5,
+                'Nama Tahapan': keterangan,
+                'Status': 'Proses',
+                'Tanggal': row.get('Tanggal Disposisi 4')
+            })
+
         log_data.extend(logs)
-    
+
     return pd.DataFrame(log_data)
+
 
 
 # --- Fungsi ringkas status ---
@@ -234,6 +289,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
