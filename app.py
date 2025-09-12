@@ -194,7 +194,7 @@ with col2:
             """,
             unsafe_allow_html=True
         )
-        cari = st.button("🔍 Lacak")
+        cari = st.button("🔍 Lacak", use_container_width=True)
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
@@ -250,6 +250,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
