@@ -175,20 +175,27 @@ st.markdown(
 )
 
 # --- Input + Button di Tengah ---
-col1, col2, col3 = st.columns([1,2,1])
+col1, col2, col3 = st.columns([1, 2, 1])
+
 with col2:
-    col_input, col_btn = st.columns([5,3])  # agar tombol lebih melebar
+    col_input, col_btn = st.columns([5, 3])  # Menggunakan rasio ini untuk mengatur lebar
+    
     with col_input:
-        nip = st.text_input("Masukkan NIP:", label_visibility="collapsed", 
-                            placeholder="Contoh: 198765432019032001")
+        nip = st.text_input(
+            "Masukkan NIP:",
+            label_visibility="collapsed",
+            placeholder="Contoh: 198765432019032001"
+        )
+    
     with col_btn:
         st.markdown(
             """
             <style>
             div.stButton > button:first-child {
-                height: 38px;      /* lebih ramping */
-                padding: 0px 20px; /* kiri kanan lebih lebar */
+                height: 38px;
+                padding: 0px 20px;
                 border-radius: 6px;
+                margin-top: 27px; /* Tambahkan margin-top untuk menyamakan posisi dengan input */
             }
             </style>
             """,
@@ -250,6 +257,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
