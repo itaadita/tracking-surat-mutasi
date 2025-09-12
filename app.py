@@ -178,7 +178,7 @@ st.markdown(
 col1, col2, col3 = st.columns([1, 3, 1])
 with col2:
     nip = st.text_input("Contoh: 198765432019032001", label_visibility="collapsed")
-    st.button("🔍 Lacak")
+    cari = st.button("🔍 Lacak")
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
@@ -234,6 +234,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
