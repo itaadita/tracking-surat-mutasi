@@ -163,9 +163,9 @@ with col2:
 # Judul Tracking
 st.markdown(
     """
-    <div style="text-align:center;">
+    <div style="text-align:center; margin-top:40px;">
         <h2 style="color:#2c3e50;">📄 Tracking Surat Mutasi</h2>
-        <p style="font-size:16px; color:#34495e;">
+        <p style="font-size:16px; color:#34495e; margin-top:20px;">
             Masukkan <b>NIP</b> Anda untuk melakukan pencarian progress <br>
             <strong>Surat Mutasi</strong> di lingkungan Kementerian Agama.
         </p>
@@ -177,12 +177,24 @@ st.markdown(
 # --- Input + Button di Tengah ---
 col1, col2, col3 = st.columns([1,2,1])
 with col2:
-    col_input, col_btn = st.columns([5,1])
+    col_input, col_btn = st.columns([5,2])  # agar tombol lebih melebar
     with col_input:
         nip = st.text_input("Masukkan NIP:", label_visibility="collapsed", 
                             placeholder="Contoh: 198765432019032001")
     with col_btn:
-        cari = st.button("🔍 Lacak", use_container_width=True)
+        st.markdown(
+            """
+            <style>
+            div.stButton > button:first-child {
+                height: 38px;      /* lebih ramping */
+                padding: 0px 20px; /* kiri kanan lebih lebar */
+                border-radius: 6px;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+        cari = st.button("🔍 Lacak")
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
@@ -238,6 +250,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
