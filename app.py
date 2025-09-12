@@ -177,7 +177,7 @@ st.markdown(
 # --- Input + Button di Tengah ---
 col1, col2, col3 = st.columns([1,2,1])
 with col2:
-    col_input, col_btn = st.columns([7,1])  # agar tombol lebih melebar
+    col_input, col_btn = st.columns([5,3])  # agar tombol lebih melebar
     with col_input:
         nip = st.text_input("Masukkan NIP:", label_visibility="collapsed", 
                             placeholder="Contoh: 198765432019032001")
@@ -250,6 +250,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
