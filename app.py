@@ -172,11 +172,11 @@ df_log = buat_log_df(df)
 # --- UI Halaman Depan (Logo + Header Tengah) ---
 col1, col2, col3 = st.columns([1,2,1])
 with col2:  # Logo di kolom tengah
-    st.image("assets/kemenag.png", width=120)
+    st.image("assets/kemenag.png", width=90)  # 🔹 Logo diperkecil
 
 st.markdown(
     """
-    <h2 style="text-align:center; color:#2c3e50; font-size:18px; margin-top:10px; margin-bottom:0;">
+    <h2 style="text-align:center; color:#2c3e50; font-size:18px; margin-top:8px; margin-bottom:0;">
         Kementerian Agama Republik Indonesia<br>
         Direktorat Jenderal Pendidikan Islam
     </h2>
@@ -201,11 +201,15 @@ st.markdown(
 # --- Input NIP + Button di Tengah ---
 col1, col2, col3 = st.columns([1,2,1])
 with col2:
-    input_col1, input_col2 = st.columns([3,1])
+    input_col1, input_col2 = st.columns([4,1])  # 🔹 lebih proporsional
     with input_col1:
-        nip = st.text_input("Masukkan NIP:", label_visibility="collapsed", placeholder="Contoh: 198765432019032001")
+        nip = st.text_input(
+            "Masukkan NIP:",
+            label_visibility="collapsed",
+            placeholder="Contoh: 198765432019032001"
+        )
     with input_col2:
-        cari = st.button("🔍 Lacak")
+        cari = st.button("🔍 Lacak", use_container_width=True)  # 🔹 tombol full lebar
 
 # --- Eksekusi pencarian ---
 if nip and cari:
@@ -244,6 +248,7 @@ st.markdown("""
 Diberdayakan oleh: <b>Tim Kerja OKH</b>
 </p>
 """, unsafe_allow_html=True)
+
 
 
 
