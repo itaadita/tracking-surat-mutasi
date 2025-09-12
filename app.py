@@ -169,12 +169,34 @@ def timeline_tracking(log_rows):
 # --- Buat log dataframe ---
 df_log = buat_log_df(df)
 
-# --- UI ---
-st.title("📄 Tracking Surat")
+# --- UI Halaman Depan ---
+st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Logo_of_Ministry_of_Religious_Affairs_of_the_Republic_of_Indonesia.svg/800px-Logo_of_Ministry_of_Religious_Affairs_of_the_Republic_of_Indonesia.svg.png",
+         width=120)
 
-nip = st.text_input("Masukkan NIP untuk Pencarian:")
+st.markdown("""
+<h2 style="text-align:center; color:#2c3e50;">
+Kementerian Agama Republik Indonesia<br>
+Direktorat Jenderal Pendidikan Islam
+</h2>
+""", unsafe_allow_html=True)
 
-if nip:
+st.title("📄 Tracking Surat Mutasi")
+
+st.markdown("""
+<p style="font-size:18px; text-align:center; color:#34495e;">
+Masukkan <b>NIP</b> Anda untuk melakukan pencarian progress <br>
+<strong>Surat Mutasi</strong> di lingkungan Kementerian Agama.
+</p>
+""", unsafe_allow_html=True)
+
+col1, col2 = st.columns([3,1])
+with col1:
+    nip = st.text_input("Masukkan NIP:", label_visibility="collapsed", placeholder="Contoh: 198765432019032001")
+with col2:
+    cari = st.button("🔍 Lacak")
+
+# --- Eksekusi pencarian ---
+if nip and cari:
     hasil = df[df['NIP'].astype(str).str.strip().str.lower() == nip.strip().lower()]
     
     if not hasil.empty:
@@ -202,6 +224,16 @@ if nip:
 
     else:
         st.warning("NIP tidak ditemukan.")
+
+# --- Footer ---
+st.markdown("""
+<hr>
+<p style="text-align:center; color:gray; font-size:14px;">
+Diberdayakan oleh: <b>Tim Kerja OKH</b>
+</p>
+""", unsafe_allow_html=True)
+
+
 
 
 
