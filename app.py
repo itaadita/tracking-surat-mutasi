@@ -170,21 +170,22 @@ def timeline_tracking(log_rows):
 df_log = buat_log_df(df)
 
 # --- UI Halaman Depan (Logo + Header Tengah) ---
+col_logo, col_empty, col_logo2 = st.columns([4,2,4])
+with col_logo2:
+    st.image("assets/kemenag.png", width=120)
+
 st.markdown(
     """
-    <div style="text-align:center;">
-        <img src="assets/kemenag.png" width="120">
-        <h2 style="color:#2c3e50; margin-top:10px;">
-            Kementerian Agama Republik Indonesia<br>
-            Direktorat Jenderal Pendidikan Islam
-        </h2>
-    </div>
+    <h2 style="text-align:center; color:#2c3e50; margin-top:10px;">
+        Kementerian Agama Republik Indonesia<br>
+        Direktorat Jenderal Pendidikan Islam
+    </h2>
     """,
     unsafe_allow_html=True
 )
 
 # 🔹 Tambahkan jeda 2 baris kosong
-st.markdown("<br><br>", unsafe_allow_html=True)
+st.markdown("<br>", unsafe_allow_html=True)
 
 st.markdown(
     """
@@ -196,6 +197,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 # --- Input NIP ---
 col1, col2 = st.columns([3,1])
@@ -241,6 +243,7 @@ st.markdown("""
 Diberdayakan oleh: <b>Tim Kerja OKH</b>
 </p>
 """, unsafe_allow_html=True)
+
 
 
 
