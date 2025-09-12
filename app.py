@@ -175,7 +175,7 @@ st.markdown(
 )
 
 # --- Input + Button di Tengah ---
-col1, col2 = st.columns([3,1])
+col1, col2 = st.columns([2,1])
 with col1:
     nip = st.text_input("Masukkan NIP:", label_visibility="collapsed", placeholder="Contoh: 198765432019032001")
 with col2:
@@ -235,6 +235,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
