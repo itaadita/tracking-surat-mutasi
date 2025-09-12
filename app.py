@@ -175,44 +175,34 @@ st.markdown(
 )
 
 # --- Input + Button di Tengah ---
+# --- Tampilan di Tengah ---
 col1, col2, col3 = st.columns([1, 2, 1])
 
 with col2:
-    col_input, col_btn = st.columns([5, 3])
-
-    with col_input:
-        st.markdown(
-            """
-            <style>
-                .stTextInput > div > div > input {
-                    height: 38px;
-                    vertical-align: middle;
-                }
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
-        nip = st.text_input(
-            "Masukkan NIP:",
-            label_visibility="collapsed",
-            placeholder="Contoh: 198765432019032001"
-        )
+    # Kolom untuk input NIP
+    st.text_input(
+        "Masukkan NIP:",
+        label_visibility="collapsed",
+        placeholder="Contoh: 198765432019032001"
+    )
     
-    with col_btn:
-        st.markdown(
-            """
-            <style>
-                div.stButton > button:first-child {
-                    height: 38px;
-                    padding: 0px 20px;
-                    border-radius: 6px;
-                    margin-top: 27px; /* Sesuaikan nilai ini */
-                }
-            </style>
-            """,
-            unsafe_allow_html=True
-        )
-        cari = st.button("🔍 Lacak", use_container_width=True)
+    # Menggunakan markdown dengan CSS untuk menengahkan tombol
+    st.markdown(
+        """
+        <style>
+            .stButton>button {
+                display: block; /* Membuat tombol menjadi block element */
+                margin-left: auto; /* Margin kiri auto */
+                margin-right: auto; /* Margin kanan auto */
+                height: 38px;
+                padding: 0px 20px;
+                border-radius: 6px;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    cari = st.button("🔍 Lacak", use_container_width=False)
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
@@ -268,6 +258,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
