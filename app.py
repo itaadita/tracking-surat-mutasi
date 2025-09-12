@@ -179,29 +179,24 @@ col1, col2, col3 = st.columns([1,2,1])
 with col2:
     col_input, col_btn = st.columns([5,2])  # agar tombol lebih melebar
     with col_input:
-        nip = st.text_input(
-            "Masukkan NIP:", 
-            label_visibility="collapsed", 
-            placeholder="Contoh: 198765432019032001"
-        )
+        nip = st.text_input("Masukkan NIP:", label_visibility="collapsed", 
+                            placeholder="Contoh: 198765432019032001")
     with col_btn:
         st.markdown(
             """
             <style>
             div.stButton > button:first-child {
-                height: 38px;               /* tombol ramping */
-                padding: 0px 18px;          /* kiri kanan lebar */
+                height: 38px;      /* lebih ramping */
+                padding: 0px 20px; /* kiri kanan lebih lebar */
                 border-radius: 6px;
-                display: flex;              /* supaya inline */
-                align-items: center;        /* vertikal rata tengah */
-                justify-content: center;    /* horizontal rata tengah */
-                gap: 6px;                   /* jarak antara icon & teks */
             }
             </style>
             """,
             unsafe_allow_html=True
         )
         cari = st.button("🔍 Lacak")
+
+st.markdown("<hr>", unsafe_allow_html=True)
 
 # --- Eksekusi pencarian ---
 if nip and cari:
@@ -255,6 +250,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
