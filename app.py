@@ -148,12 +148,12 @@ col1, col2, col3 = st.columns([1,1,1])
 with col2:
     st.image("assets/kemenag.png", width=120)
 
-# Header di tengah
+# Header di tengah (rapikan jarak antar baris)
 st.markdown(
     """
-    <div style="text-align:center; margin-top:10px;">
-        <h4 style="margin-bottom:4px;">Kementerian Agama Republik Indonesia</h4>
-        <h5 style="margin-top:4px;">Direktorat Jenderal Pendidikan Islam</h5>
+    <div style="text-align:center; margin-top:-10px;">
+        <h4 style="margin:2px 0;">Kementerian Agama Republik Indonesia</h4>
+        <h5 style="margin:0;">Direktorat Jenderal Pendidikan Islam</h5>
     </div>
     """,
     unsafe_allow_html=True
@@ -239,6 +239,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
