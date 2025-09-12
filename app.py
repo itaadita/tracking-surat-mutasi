@@ -175,34 +175,11 @@ st.markdown(
 )
 
 # --- Input + Button di Tengah ---
-# --- Tampilan di Tengah ---
-col1, col2, col3 = st.columns([1, 2, 1])
-
+col1, col2 = st.columns([3,1])
+with col1:
+    nip = st.text_input("Masukkan NIP:", label_visibility="collapsed", placeholder="Contoh: 198765432019032001")
 with col2:
-    # Kolom untuk input NIP
-    st.text_input(
-        "Masukkan NIP:",
-        label_visibility="collapsed",
-        placeholder="Contoh: 198765432019032001"
-    )
-    
-    # Menggunakan markdown dengan CSS untuk menengahkan tombol
-    st.markdown(
-        """
-        <style>
-            .stButton>button {
-                display: block; /* Membuat tombol menjadi block element */
-                margin-left: auto; /* Margin kiri auto */
-                margin-right: auto; /* Margin kanan auto */
-                height: 38px;
-                padding: 0px 20px;
-                border-radius: 6px;
-            }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-    cari = st.button("🔍 Lacak", use_container_width=False)
+    cari = st.button("🔍 Lacak")
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
@@ -258,6 +235,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
