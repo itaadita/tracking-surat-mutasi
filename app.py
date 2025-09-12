@@ -170,8 +170,6 @@ def timeline_tracking(log_rows):
 df_log = buat_log_df(df)
 
 # --- UI Halaman Depan ---
-st.image("assets/kemenag.png", width=120)
-
 st.markdown(
     """
     <div style="text-align:center;">
@@ -240,6 +238,7 @@ st.markdown("""
 Diberdayakan oleh: <b>Tim Kerja OKH</b>
 </p>
 """, unsafe_allow_html=True)
+
 
 
 
