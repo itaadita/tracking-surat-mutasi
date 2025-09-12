@@ -121,6 +121,47 @@ def gabung_log(row):
 
     return logs
 
+# --- Fungsi timeline ala Shopee ---
+def timeline_tracking(log_rows):
+    st.markdown("""
+    <style>
+    .timeline {
+        border-left: 3px solid #3498db;
+        margin-left: 20px;
+        padding-left: 20px;
+    }
+    .entry {
+        margin-bottom: 15px;
+        position: relative;
+    }
+    .entry:before {
+        content: "●";
+        position: absolute;
+        left: -23px;
+        font-size: 18px;
+        color: #3498db;
+    }
+    .done:before {
+        color: #2ecc71;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown("### 🧭 Timeline Proses Surat")
+
+    html = "<div class='timeline'>"
+    for _, step in log_rows.iterrows():
+        status_class = "done" if step['Status'] not in ["On Progress", "Proses"] else ""
+        html += f"""
+        <div class='entry {status_class}'>
+            <b>Step {step['Step']}:</b> {step['Nama Tahapan']}<br>
+            📅 {step['Tanggal']} | Status: {step['Status']}
+        </div>
+        """
+    html += "</div>"
+    st.markdown(html, unsafe_allow_html=True)
+
+# --- Buat log dataframe ---
 df_log = buat_log_df(df)
 
 # --- UI ---
@@ -145,18 +186,9 @@ if nip:
         status_akhir = logs_ringkas[-1] if logs_ringkas else "Belum ada proses"
         st.write(f"**Status Surat Terakhir:** {status_akhir}")
 
-        st.markdown("**🧭 Alur Proses Surat (Visual Warna):**", unsafe_allow_html=True)
         log_rows = df_log[df_log['Nomor Surat'] == row['No.Surat']]
         if not log_rows.empty:
-            for _, log_row in log_rows.iterrows():
-                warna = "#3498db" if log_row['Status'] in ["On Progress", "Proses"] else "#2ecc71"
-                html_log = f"""
-                <div style='background-color:{warna}; padding:10px; border-radius:8px; margin-bottom:6px; color:white;'>
-                    <b>Step {log_row['Step']}:</b> {log_row['Nama Tahapan']}<br>
-                    <i>Tanggal: {log_row['Tanggal']}</i> | Status: {log_row['Status']}
-                </div>
-                """
-                st.markdown(html_log, unsafe_allow_html=True)
+            timeline_tracking(log_rows)  # 🔹 Panggil timeline Shopee style
         else:
             st.info("Belum ada log alur proses ditemukan.")
 
@@ -165,6 +197,7 @@ if nip:
 
     else:
         st.warning("NIP tidak ditemukan.")
+
 
 
 
