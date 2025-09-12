@@ -31,8 +31,8 @@ sheet = spreadsheet.get_worksheet(0)
     #'Diteruskan Kepada', 'Status Tindak Lanjut'
 #]
 
-# --- Refresh data ---
-if 'df' not in st.session_state or st.button("🔄 Refresh Data"):
+# --- Refresh data (tanpa tombol) ---
+if 'df' not in st.session_state:
     raw_data = sheet.get_all_values()
     
     # baris ke-10 (index 9) jadi header
@@ -45,8 +45,6 @@ if 'df' not in st.session_state or st.button("🔄 Refresh Data"):
 
 df = st.session_state.df
 
-if 'last_refresh' in st.session_state:
-    st.caption(f"📅 Data terakhir diperbarui: {st.session_state.last_refresh.strftime('%Y-%m-%d %H:%M:%S')}")
 
 # --- Fungsi log alur ---
 def buat_log_df(df):
@@ -55,59 +53,31 @@ def buat_log_df(df):
         no_surat = row['No.Surat']
         logs = []
 
-        # Disposisi 1
-        if pd.notna(row['Disposisi 1']):
-            logs.append({
-                'Nomor Surat': no_surat,
-                'Step': 1,
-                'Nama Tahapan': f"Disposisi: {row['Disposisi 1']}",
-                'Status': 'Proses',
-                'Tanggal': row['Tanggal Disposisi 1']
-            })
-
-        # Disposisi 2
-        if pd.notna(row['Disposisi 2']):
-            logs.append({
-                'Nomor Surat': no_surat,
-                'Step': 2,
-                'Nama Tahapan': f"Disposisi: {row['Disposisi 2']}",
-                'Status': 'Proses',
-                'Tanggal': row['Tanggal Disposisi 2']
-            })
-
-        # Disposisi 3
-        if pd.notna(row['Disposisi 3']):
-            logs.append({
-                'Nomor Surat': no_surat,
-                'Step': 3,
-                'Nama Tahapan': f"Disposisi: {row['Disposisi 3']}",
-                'Status': 'Proses',
-                'Tanggal': row['Tanggal Disposisi 3']
-            })
-
-        # Disposisi 4
-        if pd.notna(row['Disposisi 4']):
-            logs.append({
-                'Nomor Surat': no_surat,
-                'Step': 4,
-                'Nama Tahapan': f"Disposisi: {row['Disposisi 4']}",
-                'Status': 'Proses',
-                'Tanggal': row['Tanggal Disposisi 4']
-            })
+        # Disposisi 1-4
+        for i in range(1, 5):
+            if pd.notna(row.get(f'Disposisi {i}')):
+                logs.append({
+                    'Nomor Surat': no_surat,
+                    'Step': i,
+                    'Nama Tahapan': f"Disposisi: {row[f'Disposisi {i}']}",
+                    'Status': 'Proses',
+                    'Tanggal': row.get(f'Tanggal Disposisi {i}')
+                })
 
         # Diteruskan Kepada (final)
-        if pd.notna(row['Diteruskan Kepada']):
+        if pd.notna(row.get('Diteruskan Kepada')):
             logs.append({
                 'Nomor Surat': no_surat,
                 'Step': 5,
                 'Nama Tahapan': f"Diteruskan Kepada: {row['Diteruskan Kepada']}",
-                'Status': row['Status Tindak Lanjut'],
-                'Tanggal': row['Tanggal Surat Diterima']
+                'Status': row.get('Status Tindak Lanjut'),
+                'Tanggal': row.get('Tanggal Surat Diterima')
             })
 
         log_data.extend(logs)
     
     return pd.DataFrame(log_data)
+
 
 # --- Fungsi ringkas status ---
 def gabung_log(row):
@@ -120,6 +90,7 @@ def gabung_log(row):
         logs.append(f"Diteruskan Kepada: {row['Diteruskan Kepada']} - Status: {row['Status Tindak Lanjut']}")
 
     return logs
+
 
 # --- Fungsi timeline ala Shopee ---
 def timeline_tracking(log_rows):
@@ -149,7 +120,6 @@ def timeline_tracking(log_rows):
 
     st.markdown("### 🧭 Timeline Proses Surat")
 
-    # 🔹 Bangun HTML
     html = "<div class='timeline'>"
     for _, step in log_rows.iterrows():
         status_class = "done" if step['Status'] not in ["On Progress", "Proses"] else "progress"
@@ -163,24 +133,20 @@ def timeline_tracking(log_rows):
         )
     html += "</div>"
 
-    # 🔹 Render HTML sekali saja
     st.markdown(html, unsafe_allow_html=True)
+
 
 # --- Buat log dataframe ---
 df_log = buat_log_df(df)
 
+
 # --- UI Halaman Depan (Logo + Header Tengah) ---
 st.markdown("<br>", unsafe_allow_html=True)
 
-# Logo di tengah
-st.markdown(
-    """
-    <div style="text-align: center;">
-        <img src="assets/kemenag.png" width="100">
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+# Logo di tengah (pakai st.image agar pasti muncul)
+st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
+st.image("assets/kemenag.png", width=100)
+st.markdown("</div>", unsafe_allow_html=True)
 
 # Header
 st.markdown(
@@ -194,6 +160,7 @@ st.markdown(
 )
 
 st.markdown("<hr>", unsafe_allow_html=True)
+
 
 # Judul Tracking
 st.markdown(
@@ -209,6 +176,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
 # --- Input + Button di Tengah ---
 col1, col2, col3 = st.columns([1,2,1])
 with col2:
@@ -221,15 +189,6 @@ with col2:
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
-# --- Data terakhir diperbarui ---
-st.markdown(
-    f"""
-    <div style="text-align: center; font-size: 13px; color: gray; margin-bottom: 10px;">
-        📅 Data terakhir diperbarui: {pd.Timestamp.now().strftime("%Y-%m-%d %H:%M:%S")}
-    </div>
-    """,
-    unsafe_allow_html=True
-)
 
 # --- Eksekusi pencarian ---
 if nip and cari:
@@ -251,7 +210,7 @@ if nip and cari:
 
         log_rows = df_log[df_log['Nomor Surat'] == row['No.Surat']]
         if not log_rows.empty:
-            timeline_tracking(log_rows)  # 🔹 Panggil timeline Shopee style
+            timeline_tracking(log_rows)
         else:
             st.info("Belum ada log alur proses ditemukan.")
 
@@ -260,6 +219,19 @@ if nip and cari:
 
     else:
         st.warning("NIP tidak ditemukan.")
+
+
+# --- Data terakhir diperbarui (dipindah ke bawah) ---
+if 'last_refresh' in st.session_state:
+    st.markdown(
+        f"""
+        <div style="text-align: center; font-size: 13px; color: gray; margin-bottom: 5px; margin-top: 15px;">
+            📅 Data terakhir diperbarui: {st.session_state.last_refresh.strftime("%Y-%m-%d %H:%M:%S")}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 
 # --- Footer ---
 st.markdown(
@@ -270,6 +242,8 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+
 
 
 
