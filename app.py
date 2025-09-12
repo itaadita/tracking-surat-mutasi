@@ -141,27 +141,17 @@ df_log = buat_log_df(df)
 
 
 # --- UI Halaman Depan (Logo + Header Tengah) ---
-st.markdown(
-    """
-    <style>
-    .centered-image {
-        display: flex;
-        justify-content: center;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+st.markdown("<br>", unsafe_allow_html=True)
 
-# Logo di tengah dengan st.image
-col1, col2, col3 = st.columns([1,2,1])
+# Logo di tengah pakai st.image
+col1, col2, col3 = st.columns([1,1,1])
 with col2:
     st.image("assets/kemenag.png", width=120)
 
 # Header di tengah
 st.markdown(
     """
-    <div style="text-align:center;">
+    <div style="text-align:center; margin-top:10px;">
         <h4 style="margin-bottom:4px;">Kementerian Agama Republik Indonesia</h4>
         <h5 style="margin-top:4px;">Direktorat Jenderal Pendidikan Islam</h5>
     </div>
@@ -169,34 +159,21 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# 🔹 Tambahkan jeda
-st.markdown("<br><br>", unsafe_allow_html=True)
-
-st.markdown(
-    """
-    <h1 style="text-align:center; color:#2c3e50;">📄 Tracking Surat Mutasi</h1>
-    <p style="font-size:18px; text-align:center; color:#34495e;">
-        Masukkan <b>NIP</b> Anda untuk melakukan pencarian progress <br>
-        <strong>Surat Mutasi</strong> di lingkungan Kementerian Agama.
-    </p>
-    """,
-    unsafe_allow_html=True
-)
+st.markdown("<br>", unsafe_allow_html=True)
 
 # Judul Tracking
 st.markdown(
     """
-    <div style="text-align: center; margin-top: 20px;">
-        <h2>📄 Tracking Surat Mutasi</h2>
-        <p style="font-size:16px;">
+    <div style="text-align:center;">
+        <h2 style="color:#2c3e50;">📄 Tracking Surat Mutasi</h2>
+        <p style="font-size:16px; color:#34495e;">
             Masukkan <b>NIP</b> Anda untuk melakukan pencarian progress <br>
-            <b>Surat Mutasi</b> di lingkungan Kementerian Agama.
+            <strong>Surat Mutasi</strong> di lingkungan Kementerian Agama.
         </p>
     </div>
     """,
     unsafe_allow_html=True
 )
-
 
 # --- Input + Button di Tengah ---
 col1, col2, col3 = st.columns([1,2,1])
@@ -209,7 +186,6 @@ with col2:
         cari = st.button("🔍 Lacak", use_container_width=True)
 
 st.markdown("<hr>", unsafe_allow_html=True)
-
 
 # --- Eksekusi pencarian ---
 if nip and cari:
@@ -263,6 +239,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
