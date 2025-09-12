@@ -121,7 +121,7 @@ def gabung_log(row):
 
     return logs
 
-# --- Fungsi timeline ala Shopee + Emoji ---
+# --- Fungsi timeline ala Shopee ---
 def timeline_tracking(log_rows):
     st.markdown("""
     <style>
@@ -144,36 +144,31 @@ def timeline_tracking(log_rows):
     .done:before {
         color: #2ecc71;
     }
-    .entry-text {
-        font-size: 15px;
-    }
-    .done .entry-text {
-        color: #2ecc71;
-    }
-    .progress .entry-text {
-        color: #7f8c8d;
-    }
     </style>
     """, unsafe_allow_html=True)
 
     st.markdown("### 🧭 Timeline Proses Surat")
 
+    # 🔹 Bangun HTML sekaligus
     html = "<div class='timeline'>"
     for _, step in log_rows.iterrows():
         status_class = "done" if step['Status'] not in ["On Progress", "Proses"] else "progress"
-        icon = "✅" if status_class == "done" else "⏳"
+        emoji = "✅" if status_class == "done" else "⏳"
 
         html += f"""
         <div class='entry {status_class}'>
             <div class='entry-text'>
-                <b>Step {step['Step']}:</b> {step['Nama Tahapan']} {icon}<br>
+                <b>Step {step['Step']}:</b> {step['Nama Tahapan']} {emoji}<br>
                 📅 {step['Tanggal']} | Status: {step['Status']}
             </div>
         </div>
         """
+
     html += "</div>"
 
+    # 🔹 Render sekali saja, bukan per loop
     st.markdown(html, unsafe_allow_html=True)
+
 
 # --- Buat log dataframe ---
 df_log = buat_log_df(df)
@@ -211,6 +206,7 @@ if nip:
 
     else:
         st.warning("NIP tidak ditemukan.")
+
 
 
 
