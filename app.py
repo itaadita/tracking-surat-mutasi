@@ -260,7 +260,7 @@ if nip and cari:
     if not hasil.empty:
         row = hasil.iloc[0]
 
-       st.subheader("📌 Hasil Pencarian:")
+        st.subheader("📌 Hasil Pencarian:")
         st.write(f"**Nomor Surat:** {row['No.Surat']}")
         st.write(f"**Nama Ybs:** {row['NAMA']}")
         st.write(f"**NIP:** {row['NIP']}")
@@ -309,6 +309,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
