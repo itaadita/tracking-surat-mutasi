@@ -175,8 +175,14 @@ def timeline_tracking(log_rows):
 
     html = "<div class='timeline'>"
     for _, step in log_rows.iterrows():
-        status_class = "done" if step['Status'] not in ["On Progress", "Proses"] else "progress"
-        emoji = "✅" if status_class == "done" else "⏳"
+        # --- Cek logika Biro SDM ---
+        nama_tahapan_lower = str(step['Nama Tahapan']).lower()
+        if 'biro sdm' in nama_tahapan_lower:
+            status_class = "done"
+            emoji = "✅"
+        else:
+            status_class = "done" if step['Status'] not in ["On Progress", "Proses"] else "progress"
+            emoji = "✅" if status_class == "done" else "⏳"
 
         html += (
             f"<div class='entry {status_class}'>"
@@ -262,6 +268,7 @@ st.markdown("""
         Diberdayakan oleh: <b>Tim Kerja OKH - Sekretariat Direktorat Jenderal Pendidikan Islam</b>
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
