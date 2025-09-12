@@ -172,6 +172,15 @@ df_log = buat_log_df(df)
 # --- UI Halaman Depan ---
 st.image("assets/kemenag.png", width=120)
 
+st.markdown(
+    """
+    <div style="text-align:center;">
+        <img src="assets/kemenag.png" width="120">
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 st.markdown("""
 <h2 style="text-align:center; color:#2c3e50;">
 Kementerian Agama Republik Indonesia<br>
@@ -231,6 +240,8 @@ st.markdown("""
 Diberdayakan oleh: <b>Tim Kerja OKH</b>
 </p>
 """, unsafe_allow_html=True)
+
+
 
 
 
