@@ -46,7 +46,7 @@ if 'df' not in st.session_state:
 df = st.session_state.df
 
 
-# --- Fungsi bantu untuk cek kolom terisi ---
+# --- Fungsi bantu ---
 def is_filled(val):
     return pd.notna(val) and str(val).strip() != ""
 
@@ -80,7 +80,6 @@ def buat_log_df(df):
                 'Tanggal': row.get('Tanggal Disposisi 1')
             })
         else:
-            # Stop jika Step 2 kosong
             log_data.extend(logs)
             continue
 
@@ -103,7 +102,7 @@ def buat_log_df(df):
             })
         else:
             log_data.extend(logs)
-            continue  # Stop jika Step 3 kosong
+            continue
 
         # --- Step 4 ---
         disp3 = row.get('Disposisi 3')
@@ -126,7 +125,7 @@ def buat_log_df(df):
             })
         else:
             log_data.extend(logs)
-            continue  # Stop jika Step 4 kosong
+            continue
 
         # --- Step 5 ---
         disp4 = row.get('Disposisi 4')
@@ -253,31 +252,38 @@ st.markdown("<hr>", unsafe_allow_html=True)
 
 # --- Eksekusi pencarian ---
 if nip and cari:
-    hasil = df[df['NIP'].astype(str).str.strip().str.lower() == nip.strip().lower()]
-    
+    # Hapus duplikat NIP/No.Surat
+    df_unique = df.drop_duplicates(subset=['No.Surat', 'NIP'], keep='last')
+
+    hasil = df_unique[df_unique['NIP'].astype(str).str.strip().str.lower() == nip.strip().lower()]
+
     if not hasil.empty:
         row = hasil.iloc[0]
 
-        st.subheader("📌 Hasil Pencarian:")
+       st.subheader("📌 Hasil Pencarian:")
         st.write(f"**Nomor Surat:** {row['No.Surat']}")
         st.write(f"**Nama Ybs:** {row['NAMA']}")
         st.write(f"**NIP:** {row['NIP']}")
         st.write(f"**Tanggal Surat:** {row['Tanggal Surat']}")
         st.write(f"**Perihal:** {row['Perihal']}")
-            
-        logs_ringkas = gabung_log(row)
-        status_akhir = logs_ringkas[-1] if logs_ringkas else "Belum ada proses"
+
+        # Buat log timeline hanya dari row ini
+        df_log = buat_log_df(pd.DataFrame([row]))
+
+        # Status terakhir
+        if not df_log.empty:
+            status_akhir = df_log.iloc[-1]['Nama Tahapan']
+        else:
+            status_akhir = "Belum ada proses"
+
         st.write(f"**Status Surat Terakhir:** {status_akhir}")
 
-        log_rows = df_log[df_log['Nomor Surat'] == row['No.Surat']]
-        if not log_rows.empty:
-            timeline_tracking(log_rows)
+        if not df_log.empty:
+            timeline_tracking(df_log)
+            st.markdown("**📋 Tabel Log Tahapan Surat:**")
+            st.dataframe(df_log.reset_index(drop=True), use_container_width=True)
         else:
             st.info("Belum ada log alur proses ditemukan.")
-
-        st.markdown("**📋 Tabel Log Tahapan Surat:**")
-        st.dataframe(log_rows.reset_index(drop=True), use_container_width=True)
-
     else:
         st.warning("NIP tidak ditemukan.")
 
@@ -303,6 +309,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
