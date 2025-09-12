@@ -263,7 +263,7 @@ if nip and cari:
         else:
             st.info("Belum ada log alur proses ditemukan.")
     else:
-        st.warning("NIP tidak ditemukan.")
+        st.warning("Tidak ditemukan data surat mutasi untuk NIP ini. Silakan verifikasi NIP atau konfirmasi ke unit terkait.")
 
 # --- Footer ---
 st.markdown("""
@@ -271,6 +271,7 @@ st.markdown("""
         Diberdayakan oleh: <b>Tim Kerja OKH - Sekretariat Direktorat Jenderal Pendidikan Islam</b>
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
