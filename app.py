@@ -140,26 +140,26 @@ def timeline_tracking(log_rows):
 df_log = buat_log_df(df)
 
 
-# --- UI Halaman Depan (Logo + Header Tengah) ---
-st.markdown("<br>", unsafe_allow_html=True)
+# --- UI Halaman Depan
+col1, col2 = st.columns([1,4])
 
-# Logo di tengah pakai st.image
-col1, col2, col3 = st.columns([1,1,1])
+with col1:
+    st.image("assets/kemenag.png", width=100)
+
 with col2:
-    st.image("assets/kemenag.png", width=120)
-
-# Header di tengah (rapikan jarak antar baris)
-st.markdown(
-    """
-    <div style="text-align:center; margin-top:-10px;">
-        <h4 style="margin:1px 0;">Kementerian Agama Republik Indonesia</h4>
-        <h5 style="margin:0;">Direktorat Jenderal Pendidikan Islam</h5>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div style="text-align:left; margin-left:10px;">
+            <h4 style="margin-bottom:2px; margin-top:15px;">
+                KEMENTERIAN AGAMA REPUBLIK INDONESIA
+            </h4>
+            <h5 style="margin-top:2px; font-weight:normal;">
+                DIREKTORAT JENDERAL PENDIDIKAN ISLAM
+            </h5>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 # Judul Tracking
 st.markdown(
@@ -239,6 +239,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
