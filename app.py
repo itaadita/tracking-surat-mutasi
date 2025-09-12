@@ -170,8 +170,7 @@ def timeline_tracking(log_rows):
 df_log = buat_log_df(df)
 
 # --- UI Halaman Depan ---
-st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Logo_of_Ministry_of_Religious_Affairs_of_the_Republic_of_Indonesia.svg/800px-Logo_of_Ministry_of_Religious_Affairs_of_the_Republic_of_Indonesia.svg.png",
-         width=120)
+st.image("assets/kemenag.png", width=120)
 
 st.markdown("""
 <h2 style="text-align:center; color:#2c3e50;">
@@ -232,6 +231,7 @@ st.markdown("""
 Diberdayakan oleh: <b>Tim Kerja OKH</b>
 </p>
 """, unsafe_allow_html=True)
+
 
 
 
