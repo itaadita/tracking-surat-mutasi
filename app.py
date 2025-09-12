@@ -288,15 +288,8 @@ st.markdown(
     </div>
     """,
     unsafe_allow_html=True
-# --- Footer ---
-st.markdown(
-    """
-    <div style="text-align: center; font-size: 13px; color: gray;">
-        Diberdayakan oleh: <b>Tim Kerja OKH</b>
-    </div>
-    """,
-    unsafe_allow_html=True
 )
+
 
 
 
