@@ -45,6 +45,8 @@ if 'df' not in st.session_state:
 
 df = st.session_state.df
 
+import pandas as pd
+import streamlit as st
 
 # --- Fungsi bantu ---
 def is_filled(val):
@@ -55,7 +57,7 @@ def buat_log_df(df):
     log_data = []
 
     for _, row in df.iterrows():
-        no_surat = row['No.Surat']
+        no_surat = row.get('No.Surat', '-')
         logs = []
 
         # --- Step 1 ---
@@ -147,18 +149,6 @@ def buat_log_df(df):
 
     return pd.DataFrame(log_data)
 
-# --- Fungsi ringkas status ---
-def gabung_log(row):
-    logs = []
-    for i in range(1, 5):
-        if row.get(f'Disposisi {i}') and row.get(f'Tanggal Disposisi {i}'):
-            logs.append(f"Disposisi {i}: {row[f'Disposisi {i}']} ({row[f'Tanggal Disposisi {i}']})")
-
-    if row.get('Diteruskan Kepada'):
-        logs.append(f"Diteruskan Kepada: {row['Diteruskan Kepada']} - Status: {row['Status Tindak Lanjut']}")
-
-    return logs
-
 
 # --- Fungsi timeline ala Shopee ---
 def timeline_tracking(log_rows):
@@ -204,12 +194,8 @@ def timeline_tracking(log_rows):
     st.markdown(html, unsafe_allow_html=True)
 
 
-# --- Buat log dataframe ---
-df_log = buat_log_df(df)
-
-# UI Halaman Depan---
-col1, col2 = st.columns([0.7, 4.3])  # logo lebih rapat ke teks
-
+# --- UI Halaman Depan ---
+col1, col2 = st.columns([0.7, 4.3])
 with col1:
     st.image("assets/kemenag.png", width=70)
 
@@ -228,7 +214,6 @@ with col2:
         unsafe_allow_html=True
     )
 
-# Judul Tracking
 st.markdown(
     """
     <div style="text-align:center; margin-top:40px;">
@@ -242,7 +227,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --- Input + Button di Tengah ---
+# --- Input + Button ---
 col1, col2, col3 = st.columns([1, 3, 1])
 with col2:
     nip = st.text_input("Contoh: 198765432019032001", label_visibility="collapsed")
@@ -252,23 +237,22 @@ st.markdown("<hr>", unsafe_allow_html=True)
 
 # --- Eksekusi pencarian ---
 if nip and cari:
-    # Hapus duplikat NIP/No.Surat
     df_unique = df.drop_duplicates(subset=['No.Surat', 'NIP'], keep='last')
-
     hasil = df_unique[df_unique['NIP'].astype(str).str.strip().str.lower() == nip.strip().lower()]
 
     if not hasil.empty:
         row = hasil.iloc[0]
 
         st.subheader("📌 Hasil Pencarian:")
-        st.write(f"**Nomor Surat:** {row['No.Surat']}")
-        st.write(f"**Nama Ybs:** {row['NAMA']}")
-        st.write(f"**NIP:** {row['NIP']}")
-        st.write(f"**Tanggal Surat:** {row['Tanggal Surat']}")
-        st.write(f"**Perihal:** {row['Perihal']}")
+        st.write(f"**Nomor Surat:** {row.get('No.Surat', '-')}")
+        st.write(f"**Nama Ybs:** {row.get('NAMA', '-')}")
+        st.write(f"**NIP:** {row.get('NIP', '-')}")
+        st.write(f"**Tanggal Surat:** {row.get('Tanggal Surat', '-')}")
+        st.write(f"**Perihal:** {row.get('Perihal', '-')}")
 
-        # Buat log timeline hanya dari row ini
-        df_log = buat_log_df(pd.DataFrame([row]))
+        # Buat log timeline hanya dari row ini (aman)
+        single_row_df = pd.DataFrame([row.to_dict()])
+        df_log = buat_log_df(single_row_df)
 
         # Status terakhir
         if not df_log.empty:
@@ -278,6 +262,7 @@ if nip and cari:
 
         st.write(f"**Status Surat Terakhir:** {status_akhir}")
 
+        # Timeline dan tabel log
         if not df_log.empty:
             timeline_tracking(df_log)
             st.markdown("**📋 Tabel Log Tahapan Surat:**")
@@ -286,19 +271,6 @@ if nip and cari:
             st.info("Belum ada log alur proses ditemukan.")
     else:
         st.warning("NIP tidak ditemukan.")
-
-
-# --- Data terakhir diperbarui (dipindah ke bawah) ---
-if 'last_refresh' in st.session_state:
-    st.markdown(
-        f"""
-        <div style="text-align: center; font-size: 13px; color: gray; margin-bottom: 5px; margin-top: 15px;">
-            📅 Data terakhir diperbarui: {st.session_state.last_refresh.strftime("%Y-%m-%d %H:%M:%S")}
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
 
 # --- Footer ---
 st.markdown(
@@ -309,6 +281,8 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+
 
 
 
