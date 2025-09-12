@@ -170,48 +170,37 @@ def timeline_tracking(log_rows):
 df_log = buat_log_df(df)
 
 # --- UI Halaman Depan (Logo + Header Tengah) ---
-col1, col2, col3 = st.columns([1,2,1])
-with col2:  # taruh logo di kolom tengah
-    st.image("assets/kemenag.png", width=120)
-
+# Logo + Header di tengah
 st.markdown(
     """
-    <h2 style="text-align:center; color:#2c3e50; margin-top:10px;">
-        Kementerian Agama Republik Indonesia<br>
-        Direktorat Jenderal Pendidikan Islam
-    </h2>
+    <div style="text-align: center;">
+        st.image("assets/kemenag.png", width=120)
+        <h4>Kementerian Agama Republik Indonesia</h4>
+        <h5>Direktorat Jenderal Pendidikan Islam</h5>
+    </div>
     """,
     unsafe_allow_html=True
 )
 
-# 🔹 Tambahkan jeda (1 baris kosong)
-st.markdown("<br>", unsafe_allow_html=True)
+st.markdown("---")
 
+# Judul Tracking
 st.markdown(
     """
-    <h1 style="text-align:center; color:#2c3e50;">📄 Tracking Surat Mutasi</h1>
-    <p style="font-size:18px; text-align:center; color:#34495e;">
-        Masukkan <b>NIP</b> Anda untuk melakukan pencarian progress <br>
-        <strong>Surat Mutasi</strong> di lingkungan Kementerian Agama.
-    </p>
+    <div style="text-align: center;">
+        <h2>📄 Tracking Surat Mutasi</h2>
+        <p>Masukkan <b>NIP</b> Anda untuk melakukan pencarian progress <br>
+        <b>Surat Mutasi</b> di lingkungan Kementerian Agama.</p>
+    </div>
     """,
     unsafe_allow_html=True
 )
 
-st.title("📄 Tracking Surat Mutasi")
-
-st.markdown("""
-<p style="font-size:18px; text-align:center; color:#34495e;">
-Masukkan <b>NIP</b> Anda untuk melakukan pencarian progress <br>
-<strong>Surat Mutasi</strong> di lingkungan Kementerian Agama.
-</p>
-""", unsafe_allow_html=True)
-
-col1, col2 = st.columns([3,1])
-with col1:
-    nip = st.text_input("Masukkan NIP:", label_visibility="collapsed", placeholder="Contoh: 198765432019032001")
+# Kolom input + tombol ke tengah
+col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    cari = st.button("🔍 Lacak")
+    nip = st.text_input("Contoh: 198765432019032001", label_visibility="collapsed")
+    st.button("🔍 Lacak")
 
 # --- Eksekusi pencarian ---
 if nip and cari:
@@ -250,6 +239,7 @@ st.markdown("""
 Diberdayakan oleh: <b>Tim Kerja OKH</b>
 </p>
 """, unsafe_allow_html=True)
+
 
 
 
