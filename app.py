@@ -169,47 +169,32 @@ def timeline_tracking(log_rows):
 # --- Buat log dataframe ---
 df_log = buat_log_df(df)
 
-# --- UI Halaman Depan (Logo + Header Tengah) ---
+# --- UI Halaman Depan (Logo di tengah) ---
 col1, col2, col3 = st.columns([1,2,1])
-with col2:  # Logo di kolom tengah
-    st.image("assets/kemenag.png", width=90)  # 🔹 Logo diperkecil
+with col2:   # taruh logo di kolom tengah
+    st.image("assets/kemenag.png", width=120)
 
-st.markdown(
-    """
-    <h2 style="text-align:center; color:#2c3e50; font-size:18px; margin-top:8px; margin-bottom:0;">
-        Kementerian Agama Republik Indonesia<br>
-        Direktorat Jenderal Pendidikan Islam
-    </h2>
-    """,
-    unsafe_allow_html=True
-)
+st.markdown("""
+<h2 style="text-align:center; color:#2c3e50;">
+Kementerian Agama Republik Indonesia<br>
+Direktorat Jenderal Pendidikan Islam
+</h2>
+""", unsafe_allow_html=True)
 
-# 🔹 Tambahkan jeda (1 baris kosong)
-st.markdown("<br>", unsafe_allow_html=True)
+st.title("📄 Tracking Surat Mutasi")
 
-st.markdown(
-    """
-    <h1 style="text-align:center; color:#2c3e50;">📄 Tracking Surat Mutasi</h1>
-    <p style="font-size:16px; text-align:center; color:#34495e;">
-        Masukkan <b>NIP</b> Anda untuk melakukan pencarian progress <br>
-        <strong>Surat Mutasi</strong> di lingkungan Kementerian Agama.
-    </p>
-    """,
-    unsafe_allow_html=True
-)
+st.markdown("""
+<p style="font-size:18px; text-align:center; color:#34495e;">
+Masukkan <b>NIP</b> Anda untuk melakukan pencarian progress <br>
+<strong>Surat Mutasi</strong> di lingkungan Kementerian Agama.
+</p>
+""", unsafe_allow_html=True)
 
-# --- Input NIP + Button di Tengah ---
-col1, col2, col3 = st.columns([1,2,1])
+col1, col2 = st.columns([3,1])
+with col1:
+    nip = st.text_input("Masukkan NIP:", label_visibility="collapsed", placeholder="Contoh: 198765432019032001")
 with col2:
-    input_col1, input_col2 = st.columns([4,1])  # 🔹 lebih proporsional
-    with input_col1:
-        nip = st.text_input(
-            "Masukkan NIP:",
-            label_visibility="collapsed",
-            placeholder="Contoh: 198765432019032001"
-        )
-    with input_col2:
-        cari = st.button("🔍 Lacak", use_container_width=True)  # 🔹 tombol full lebar
+    cari = st.button("🔍 Lacak")
 
 # --- Eksekusi pencarian ---
 if nip and cari:
@@ -248,6 +233,7 @@ st.markdown("""
 Diberdayakan oleh: <b>Tim Kerja OKH</b>
 </p>
 """, unsafe_allow_html=True)
+
 
 
 
