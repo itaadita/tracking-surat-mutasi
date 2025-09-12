@@ -139,9 +139,8 @@ def timeline_tracking(log_rows):
 # --- Buat log dataframe ---
 df_log = buat_log_df(df)
 
-
 # UI Halaman Depan---
-col1, col2 = st.columns([1,4])
+col1, col2 = st.columns([0.7, 4.3])  # logo lebih rapat ke teks
 
 with col1:
     st.image("assets/kemenag.png", width=70)
@@ -149,7 +148,7 @@ with col1:
 with col2:
     st.markdown(
         """
-        <div style="text-align:left; margin-left:10px;">
+        <div style="text-align:left; margin-left:0px;">
             <p style="margin:0; font-size:20px; font-weight:bold;">
                 KEMENTERIAN AGAMA REPUBLIK INDONESIA
             </p>
@@ -160,10 +159,6 @@ with col2:
         """,
         unsafe_allow_html=True
     )
-
-# --- Garis tipis sebagai pemisah header ---
-st.markdown("<hr style='border:0.5px; color: gray; margin-top:5px; margin-bottom:20px;'>", unsafe_allow_html=True)
-
 
 # Judul Tracking
 st.markdown(
@@ -243,6 +238,7 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
 
 
 
