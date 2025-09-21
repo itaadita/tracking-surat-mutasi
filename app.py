@@ -234,36 +234,42 @@ st.markdown("<hr>", unsafe_allow_html=True)
 
 # --- Eksekusi pencarian ---
 if nip and cari:
-    df_unique = df.drop_duplicates(subset=['No.Surat', 'NIP'], keep='last')
-    hasil = df_unique[df_unique['NIP'].astype(str).str.strip().str.lower() == nip.strip().lower()]
+    nip_input = nip.strip()
 
-    if not hasil.empty:
-        row = hasil.iloc[0]
-
-        st.subheader("📌 Hasil Pencarian:")
-        st.write(f"**Nomor Surat:** {row.get('No.Surat', '-')}")
-        st.write(f"**Nama Ybs:** {row.get('NAMA', '-')}")
-        st.write(f"**NIP:** {row.get('NIP', '-')}")
-        st.write(f"**Tanggal Surat:** {row.get('Tanggal Surat', '-')}")
-        st.write(f"**Perihal:** {row.get('Perihal', '-')}")
-
-        # Buat log timeline hanya dari row ini
-        single_row_df = pd.DataFrame([row.to_dict()])
-        df_log = buat_log_df(single_row_df)
-
-        # Status terakhir
-        status_akhir = df_log.iloc[-1]['Nama Tahapan'] if not df_log.empty else "Belum ada proses"
-        st.write(f"**Status Surat Terakhir:** {status_akhir}")
-
-        # Timeline dan tabel log
-        if not df_log.empty:
-            timeline_tracking(df_log)
-            st.markdown("**📋 Tabel Log Tahapan Surat:**")
-            st.dataframe(df_log.reset_index(drop=True), use_container_width=True)
-        else:
-            st.info("Belum ada log alur proses ditemukan.")
+    # Validasi input: hanya angka dan panjang 18 digit
+    if not nip_input.isdigit() or len(nip_input) != 18:
+        st.error("⚠️ NIP harus berupa angka 18 digit.")
     else:
-        st.warning("Tidak ditemukan data surat mutasi untuk NIP ini. Silakan cek kembali NIP atau konfirmasi ke unit terkait.")
+        df_unique = df.drop_duplicates(subset=['No.Surat', 'NIP'], keep='last')
+        hasil = df_unique[df_unique['NIP'].astype(str).str.strip() == nip_input]
+
+        if not hasil.empty:
+            row = hasil.iloc[0]
+
+            st.subheader("📌 Hasil Pencarian:")
+            st.write(f"**Nomor Surat:** {row.get('No.Surat', '-')}")
+            st.write(f"**Nama Ybs:** {row.get('NAMA', '-')}")
+            st.write(f"**NIP:** {row.get('NIP', '-')}")
+            st.write(f"**Tanggal Surat:** {row.get('Tanggal Surat', '-')}")
+            st.write(f"**Perihal:** {row.get('Perihal', '-')}")
+
+            # Buat log timeline hanya dari row ini
+            single_row_df = pd.DataFrame([row.to_dict()])
+            df_log = buat_log_df(single_row_df)
+
+            # Status terakhir
+            status_akhir = df_log.iloc[-1]['Nama Tahapan'] if not df_log.empty else "Belum ada proses"
+            st.write(f"**Status Surat Terakhir:** {status_akhir}")
+
+            # Timeline dan tabel log
+            if not df_log.empty:
+                timeline_tracking(df_log)
+                st.markdown("**📋 Tabel Log Tahapan Surat:**")
+                st.dataframe(df_log.reset_index(drop=True), use_container_width=True)
+            else:
+                st.info("Belum ada log alur proses ditemukan.")
+        else:
+            st.warning("Tidak ditemukan data surat mutasi untuk NIP ini. Silakan cek kembali NIP atau konfirmasi ke unit terkait.")
 
 # --- Footer ---
 st.markdown("""
@@ -271,6 +277,7 @@ st.markdown("""
         Diberdayakan oleh: <b>Tim Kerja OKH - Sekretariat Direktorat Jenderal Pendidikan Islam</b>
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
