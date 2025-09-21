@@ -219,7 +219,7 @@ st.markdown("""
         <h2 style="color:#2c3e50;">📄 Tracking Surat Mutasi</h2>
         <p style="font-size:16px; color:#34495e; margin-top:20px;">
             Masukkan <b>NIP</b> Anda untuk melakukan pencarian progress <br>
-            <strong>Surat Mutasi</strong> di lingkungan Kementerian Agama.
+            <strong>Surat Mutasi</strong> di lingkungan Direktorat Jenderal Pendidikan Islam - Kementerian Agama.
         </p>
     </div>
 """, unsafe_allow_html=True)
@@ -271,6 +271,7 @@ st.markdown("""
         Diberdayakan oleh: <b>Tim Kerja OKH - Sekretariat Direktorat Jenderal Pendidikan Islam</b>
     </div>
 """, unsafe_allow_html=True)
+
 
 
 
